@@ -1,0 +1,333 @@
+{
+  "questions": [
+    {
+      "section": "1. Profilo Aziendale",
+      "question": "1.1 Qual è il settore principale dell'azienda?",
+      "type": "Multipla",
+      "ref": "AI Act Art. 3",
+      "notes": "Identifica il contesto normativo. Roadmap: Valutare entro Q1 2025.",
+      "options": ["Finanza", "Sanità", "Istruzione", "Forze dell'ordine", "Immigrazione", "Infrastrutture critiche", "Componenti di sicurezza", "Giustizia", "Altro"],
+      "score_weight": 1,
+      "risk_flag": "N/A"
+    },
+    {
+      "section": "1. Profilo Aziendale",
+      "question": "1.2 Qual è la dimensione dell'azienda?",
+      "type": "Multipla",
+      "ref": "AI Act Art. 69",
+      "notes": "Determina obblighi specifici (es. PMI vs Grande). Roadmap: Verifica entro Q1 2025.",
+      "options": ["Micro (<10 dipendenti)", "Piccola (10-50)", "Media (50-250)", "Grande (>250)"],
+      "score_weight": 1,
+      "risk_flag": "N/A"
+    },
+    {
+      "section": "",
+      "question": "1.3 L’azienda dispone di un team o competenze dedicate alla gestione IA (es. data science, MLOps)?",
+      "type": "Sì/No",
+      "ref": "AI Act Art. 17",
+      "notes": "Scoring: Basso se no. Roadmap: Creare team entro Q3 2025 (Art. 17). Alto gap se no.",
+      "score_weight": 1,
+      "risk_flag": "Low"
+    },
+    {
+      "section": "",
+      "question": "1.4 Chi è il referente per la conformità normativa (es. DPO o equivalente)?",
+      "type": "Aperta",
+      "ref": "AI Act Art. 17",
+      "notes": "Scoring: Basso se non specificato. Roadmap: Designare entro Q2 2025. Low gap se non specificato.",
+      "score_weight": 1,
+      "risk_flag": "Low"
+    },
+    {
+      "section": "",
+      "question": "1.5 L’azienda ha una strategia documentata per l’IA?",
+      "type": "Sì/No",
+      "ref": "AI Act Art. 4",
+      "notes": "Scoring: Basso se no. Roadmap: Redigere entro Q4 2025. Alto gap se no.",
+      "score_weight": 1,
+      "risk_flag": "Low"
+    },
+    {
+      "section": "",
+      "question": "1.6 Esiste una governance formalizzata per l’IA (es. comitato o processi)?",
+      "type": "Sì/No",
+      "ref": "AI Act Art. 17",
+      "notes": "Scoring: Basso se no. Roadmap: Istituire entro Q4 2025. Alto gap se no.",
+      "score_weight": 1,
+      "risk_flag": "Low"
+    },
+    {
+      "section": "",
+      "question": "1.7 È nominato un AI Compliance Officer?",
+      "type": "Sì/No",
+      "ref": "AI Act Art. 4",
+      "notes": "Scoring: Medio se no. Penalità: -10%. Roadmap: Nominare entro Q3 2025 (Obbligo Legge 132/2025).",
+      "score_weight": 1,
+      "risk_flag": "Medium"
+    }
+  ],
+  "per_system_qs": [
+    {
+      "question": "Quali ruoli ricopre l’organizzazione rispetto al sistema IA? (es. sviluppatore, utilizzatore, importatore)",
+      "type": "Multipla",
+      "notes": "Definisce obblighi specifici (Art. 3). Roadmap: Verifica entro Q1 2025.",
+      "options": ["Sviluppatore", "Utilizzatore", "Importatore", "Distributore", "Rappresentante", "Altro"],
+      "score_weight": 1,
+      "risk_flag": "N/A"
+    },
+    {
+      "question": "Caso d’uso specifico del sistema?",
+      "type": "Multipla",
+      "notes": "Identifica il contesto di rischio (Art. 6). Roadmap: Valutare entro Q1 2025.",
+      "options": ["Sanità/Biometria", "Sicurezza pubblica", "Recruitment", "Altro"],
+      "score_weight": 1,
+      "risk_flag": "N/A"
+    },
+    {
+      "question": "Il sistema influisce su diritti o sicurezza?",
+      "type": "Scala 1-5",
+      "notes": "Scoring: Alto gap se < 3. Penalità: -15% se < 3. Roadmap: Valutare entro 6 mesi.",
+      "score_weight": 1,
+      "risk_flag": "Medium"
+    },
+    {
+      "question": "Usa dati biometrici o è per enforcement?",
+      "type": "Sì/No",
+      "notes": "Scoring: Alto gap se sì. Penalità: -20%. Roadmap: Verifica conformità entro 3 mesi.",
+      "score_weight": 2,
+      "risk_flag": "High"
+    },
+    {
+      "question": "Qual è il livello di rischio?",
+      "type": "Multipla",
+      "notes": "Determina moltiplicatore di rischio (Art. 5-7). Roadmap: Classificare entro Q1 2025.",
+      "options": ["Proibito", "Alto rischio", "Rischio limitato", "Minimo"],
+      "score_weight": 1,
+      "risk_flag": "N/A"
+    },
+    {
+      "question": "I dati sono di alta qualità e privi di bias?",
+      "type": "Scala 1-5",
+      "notes": "Scoring: Alto gap se < 3. Penalità: -15% se < 3. Roadmap: Audit entro 6 mesi.",
+      "score_weight": 1,
+      "risk_flag": "Medium"
+    },
+    {
+      "question": "Sono implementate misure di cybersecurity?",
+      "type": "Sì/No",
+      "notes": "Scoring: Alto gap se no. Penalità: -20%. Roadmap: Implementa entro 6 mesi; Esempio: Aggiorna firewall entro Q2 2025."
+    },
+    {
+      "question": "Il sistema è trasparente?",
+      "type": "Sì/No",
+      "notes": "Scoring: Alto gap se no. Penalità: -15%. Roadmap: Implementa trasparenza entro 6 mesi; Esempio: Aggiungi notifica utenti entro Q2 2025."
+    },
+    {
+      "question": "Potrebbe discriminare gruppi vulnerabili?",
+      "type": "Scala 1-5",
+      "notes": "Scoring: Alto gap se < 3. Penalità: -20% se < 3. Roadmap: Valutare entro 6 mesi.",
+      "score_weight": 1,
+      "risk_flag": "High"
+    }
+  ],
+  "extra_qs": {
+    "caso_uso": {
+      "Sanità/Biometria": [
+        {
+          "question": "Il sistema è un dispositivo medico (SaMD)?",
+          "type": "Sì/No",
+          "ref": "AI Act Art. 6",
+          "notes": "Scoring: Critico se sì senza certificazione. Penalità: -30%. Roadmap: Certifica entro 6 mesi; Esempio: Registra presso autorità entro Q2 2025.",
+          "score_weight": 3,
+          "risk_flag": "High"
+        },
+        {
+          "question": "Audit GDPR per dati sensibili?",
+          "type": "Sì/No",
+          "ref": "AI Act Art. 10; GDPR Art. 35",
+          "notes": "Scoring: Alto gap se no. Penalità: -20%. Roadmap: Esegui entro 6 mesi.",
+          "score_weight": 2,
+          "risk_flag": "Medium"
+        },
+        {
+          "question": "Valutato impatto su salute/sicurezza?",
+          "type": "Scala 1-5",
+          "ref": "AI Act Art. 9",
+          "notes": "Scoring: Alto gap se < 3. Penalità: -15% se < 3. Roadmap: Valutare entro 6 mesi.",
+          "score_weight": 1,
+          "risk_flag": "Medium"
+        }
+      ],
+      "Sicurezza pubblica": [
+        {
+          "question": "Hai autorizzazioni per uso pubblico?",
+          "type": "Sì/No",
+          "ref": "AI Act Art. 5",
+          "notes": "Scoring: Critico se no. Penalità: -40%. Roadmap: Ottieni entro feb 2025; Esempio: Richiedi deroghe entro Q4 2024.",
+          "score_weight": 3,
+          "risk_flag": "High"
+        }
+      ],
+      "Recruitment": [
+        {
+          "question": "Hai informato candidati sull'uso IA?",
+          "type": "Sì/No",
+          "ref": "AI Act Art. 52",
+          "notes": "Scoring: Medio se no. Penalità: -10%. Roadmap: Informativa entro 3 mesi.",
+          "score_weight": 1,
+          "risk_flag": "Low"
+        }
+      ]
+    },
+    "ruolo": {
+      "Utilizzatore": [
+        {
+          "question": "Hai policy per monitoraggio post-market?",
+          "type": "Sì/No",
+          "ref": "AI Act Art. 29",
+          "notes": "Scoring: Critico se no. Penalità: -25%. Roadmap: Implementa entro Q4 2025; Esempio: Crea policy entro Q3 2025.",
+          "score_weight": 2,
+          "risk_flag": "Medium"
+        },
+        {
+          "question": "Informati lavoratori su uso IA?",
+          "type": "Sì/No",
+          "ref": "AI Act Art. 26; Legge 132/2025",
+          "notes": "Scoring: Alto gap se no. Penalità: -20%. Roadmap: Informativa entro 6 mesi (Obbligo Legge 132/2025); Esempio: Workshop entro Q2 2025.",
+          "score_weight": 2,
+          "risk_flag": "Medium"
+        }
+      ],
+      "Sviluppatore": [
+        {
+          "question": "Hai un sistema di gestione della qualità?",
+          "type": "Sì/No",
+          "ref": "AI Act Art. 17",
+          "notes": "Scoring: Basso se no. Penalità: -10%. Roadmap: Adotta entro Q4 2025; Esempio: Implementa QMS entro Q3 2025.",
+          "score_weight": 1,
+          "risk_flag": "Low"
+        },
+        {
+          "question": "Documentazione tecnica completa?",
+          "type": "Sì/No",
+          "ref": "AI Act Art. 11",
+          "notes": "Scoring: Medio. Penalità: -15%. Roadmap: Completa entro Q1 2026; Esempio: Redigi manuale entro Q4 2025.",
+          "score_weight": 1,
+          "risk_flag": "Low"
+        },
+        {
+          "question": "Hai condotto assessment rischio (Art. 9)?",
+          "type": "Sì/No",
+          "ref": "AI Act Art. 9",
+          "notes": "Scoring: Critico se no. Penalità: -25%. Roadmap: Esegui entro ago 2026; Esempio: Valutazione rischio entro Q2 2025.",
+          "score_weight": 3,
+          "risk_flag": "High"
+        }
+      ],
+      "Importatore": [
+        {
+          "question": "Verificato conformity da provider?",
+          "type": "Sì/No",
+          "ref": "AI Act Art. 23",
+          "notes": "Scoring: Alto gap se no. Penalità: -20%. Roadmap: Verifica entro 3 mesi; Esempio: Controlla certificati entro Q1 2025.",
+          "score_weight": 2,
+          "risk_flag": "Medium"
+        },
+        {
+          "question": "Hai segnalato non-conformità a autorità?",
+          "type": "Sì/No",
+          "ref": "AI Act Art. 23",
+          "notes": "Scoring: Medio se no. Penalità: -10%. Roadmap: Segnala entro 6 mesi; Esempio: Notifica entro Q3 2025.",
+          "score_weight": 1,
+          "risk_flag": "Low"
+        }
+      ],
+      "Distributore": [
+        {
+          "question": "Mantenuti records per traceability?",
+          "type": "Sì/No",
+          "ref": "AI Act Art. 24",
+          "notes": "Scoring: Medio. Penalità: -15%. Roadmap: Archivia entro Q1 2026; Esempio: Crea archivio entro Q4 2025.",
+          "score_weight": 1,
+          "risk_flag": "Low"
+        },
+        {
+          "question": "Hai informato su non-conformità?",
+          "type": "Sì/No",
+          "ref": "AI Act Art. 24",
+          "notes": "Scoring: Medio se no. Penalità: -10%. Roadmap: Notifica entro 6 mesi; Esempio: Avvisa entro Q3 2025.",
+          "score_weight": 1,
+          "risk_flag": "Low"
+        }
+      ],
+      "Rappresentante": [
+        {
+          "question": "Conservi documentazione per 10 anni?",
+          "type": "Sì/No",
+          "ref": "AI Act Art. 25",
+          "notes": "Scoring: Medio se no. Penalità: -15%. Roadmap: Archivia entro Q1 2026; Esempio: Archivia entro Q4 2025.",
+          "score_weight": 1,
+          "risk_flag": "Low"
+        },
+        {
+          "question": "Hai designato un referente UE?",
+          "type": "Sì/No",
+          "ref": "AI Act Art. 25",
+          "notes": "Scoring: Medio se no. Penalità: -10%. Roadmap: Nomina entro 6 mesi; Esempio: Designa entro Q3 2025.",
+          "score_weight": 1,
+          "risk_flag": "Low"
+        }
+      ]
+    },
+    "settore": {
+      "Finanza": [
+        {
+          "question": "Hai integrato GDPR per dati sensibili?",
+          "type": "Sì/No",
+          "ref": "AI Act Art. 10; GDPR Art. 35",
+          "notes": "Scoring: Alto gap se no. Penalità: -20%. Roadmap: Integra entro 6 mesi; Esempio: Audit entro Q2 2025.",
+          "score_weight": 2,
+          "risk_flag": "Medium"
+        },
+        {
+          "question": "Mitiga bias nelle valutazioni?",
+          "type": "Sì/No",
+          "ref": "AI Act Art. 10",
+          "notes": "Scoring: Medio se no. Penalità: -10%. Roadmap: Implementa entro 6 mesi; Esempio: Test bias entro Q2 2025.",
+          "score_weight": 1,
+          "risk_flag": "Low"
+        }
+      ],
+      "Sanità": [
+        {
+          "question": "Hai certificazioni mediche valide?",
+          "type": "Sì/No",
+          "ref": "AI Act Art. 6",
+          "notes": "Scoring: Critico se no. Penalità: -30%. Roadmap: Ottieni entro 6 mesi; Esempio: Registra presso autorità entro Q2 2025.",
+          "score_weight": 3,
+          "risk_flag": "High"
+        }
+      ],
+      "Istruzione": [
+        {
+          "question": "Mitiga bias nelle valutazioni?",
+          "type": "Sì/No",
+          "ref": "AI Act Art. 10",
+          "notes": "Scoring: Medio se no. Penalità: -10%. Roadmap: Implementa entro 6 mesi; Esempio: Test bias entro Q2 2025.",
+          "score_weight": 1,
+          "risk_flag": "Low"
+        }
+      ],
+      "Altro": [
+        {
+          "question": "Hai valutato rischi settoriali specifici?",
+          "type": "Sì/No",
+          "ref": "AI Act Art. 9",
+          "notes": "Scoring: Medio se no. Penalità: -10%. Roadmap: Valuta entro 6 mesi.",
+          "score_weight": 1,
+          "risk_flag": "Low"
+        }
+      ]
+    }
+  }
+}
