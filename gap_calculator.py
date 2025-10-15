@@ -1,187 +1,120 @@
-from questions_config import questions, per_system_qs, extra_qs
+import json
+from utils import load_questions
 
 def calculate_results(session_state):
-    # Calcolo scoring generale
-    general_score = 100  # Base 100%
-    count = 0
+    print("Caricamento questions_data...")
+    questions_data = load_questions()
+    print(f"questions_data: {questions_data.keys() if questions_data else 'None'}")
+    general_questions = questions_data.get('questions', [])
+    per_system_qs = questions_data.get('per_system_qs', [])
+    extra_qs = questions_data.get('extra_qs', {})
+    
+    print(f"General questions: {len(general_questions)}, Per system: {len(per_system_qs)}, Extra: {len(extra_qs) if isinstance(extra_qs, dict) else 'N/A'}")
+    
+    # Estrai risposte
+    general_responses = {q['id']: session_state.get(q['id'], '') for q in general_questions}  # Semplificato, usa id diretto
+    system_answers = session_state.get('system_answers', [{}])  # Lista di dizionari dal session_state
+    
+    print(f"General responses: {general_responses}")
+    print(f"System answers: {system_answers}")
+    
+    # Check early per Difesa/Sicurezza Nazionale
+    if general_responses.get('q1_1') in ["Difesa/Militare", "Sicurezza Nazionale"] and all(sys.get('q2_43', '') != 'Sì' for sys in system_answers):
+        print("Esclusione per Difesa/Sicurezza Nazionale applicata.")
+        return "L'AI Act non si applica a questo settore per scopi militari o di sicurezza nazionale (Art. 2) a meno che non sia escluso esplicitamente (q2_43). Analisi terminata.", [], [], []
+    
+    # Calcolo gap generali
     general_gaps = []
-    for q in questions:
-        ans = None
-        if q["question"] in session_state.answers:
-            ans = session_state.answers.get(q["question"])
-        if ans is not None:
-            weight = q.get("score_weight", 1)
-            count += weight
-            if q["type"] == "Sì/No":
-                if ans == "No" and ("Critico" in q["notes"] or "Alto gap" in q["notes"]):
-                    try:
-                        penalita = float(q["notes"].split("Penalità: -")[1].split("%")[0]) if "Penalità:" in q["notes"] else 10
-                        general_score -= penalita
-                        azione = q["notes"].split("Roadmap: ")[1].split(";")[0] if "Roadmap:" in q["notes"] else "Azione non definita"
-                    except IndexError:
-                        penalita = 10
-                        azione = "Azione default"
-                    prio = "Alta" if "Critico" in q["notes"] else "Media"
-                    tempistica = "Immediata (Legge 132/2025)" if "Legge 132/2025" in q["ref"] else "Entro 3 mesi"
-                    general_gaps.append({"Gap": q["question"], "Risposta": ans, "Azione": azione, "Priorità": prio, "Tempistica": tempistica, "Risk": q["risk_flag"]})
-            elif q["type"] == "Scala 1-5":
-                if int(ans) < 3 and ("Alto gap" in q["notes"] or "Critico" in q["notes"]):
-                    try:
-                        penalita = float(q["notes"].split("Penalità: -")[1].split("%")[0]) if "Penalità:" in q["notes"] else 10
-                        general_score -= penalita
-                        azione = q["notes"].split("Roadmap: ")[1].split(";")[0] if "Roadmap:" in q["notes"] else "Azione non definita"
-                    except IndexError:
-                        penalita = 10
-                        azione = "Azione default"
-                    prio = "Alta"
-                    tempistica = "Entro 6 mesi"
-                    general_gaps.append({"Gap": q["question"], "Risposta": ans, "Azione": azione, "Priorità": prio, "Tempistica": tempistica, "Risk": q["risk_flag"]})
-            elif q["type"] == "Multipla":
-                if ans and "Altro" in ans:
-                    general_score -= 10  # Penalità generica
-            elif q["type"] == "Aperta":
-                if not ans.strip():
-                    general_score -= 5  # Penalità minima
-    general_pct = max(0, min(100, general_score)) if count else 0
+    for q in general_questions:
+        ans = str(general_responses.get(q['id'], ''))
+        if not ans:  # Tratta valori vuoti come "No" o 0
+            ans = 'No' if q.get('type', 'Sì/No') == 'Sì/No' else '0'
+        if (q.get('type', 'Sì/No') == 'Sì/No' and ans == 'No' and 'Alto gap' in q.get('notes', '')) or \
+           (q.get('type', 'Scala 1-5') == 'Scala 1-5' and ans.isdigit() and int(ans) < 3):
+            gap_info = {
+                "Gap": q['question'],
+                "Risposta": ans,
+                "Azione": extract_action(q.get('notes', '')),
+                "Priorità": "Alta" if 'Alto gap' in q.get('notes', '') else "Media",
+                "Tempistica": extract_tempistica(q.get('notes', '')),
+                "Risk": q.get('risk_flag', 'Low')
+            }
+            general_gaps.append(gap_info)
+    
+    # Calcolo gap per ogni sistema
+    system_gaps_list = []
+    for sys_idx, sys_res in enumerate(system_answers):
+        sys_gaps = []
+        # Aggiungi domande extra basate su risposte
+        all_qs = per_system_qs.copy()  # Inizia con domande base per sistema
+        for cat, sub_qs in extra_qs.items():
+            if isinstance(sub_qs, dict):
+                if cat == 'settore_critico' and general_responses.get('q1_1') in sub_qs:
+                    all_qs.extend(sub_qs[general_responses['q1_1']])
+                elif cat == 'ruolo' and sys_res.get('q2_4') in sub_qs:
+                    all_qs.extend(sub_qs[sys_res['q2_4']])
+                elif cat == 'rischio' and sys_res.get('q2_8') in sub_qs:
+                    all_qs.extend(sub_qs[sys_res['q2_8']])
+                elif cat == 'settore' and general_responses.get('q1_1') in sub_qs:
+                    all_qs.extend(sub_qs[general_responses['q1_1']])
+                elif cat == 'caso_uso' and sys_res.get('q2_5') in sub_qs:
+                    all_qs.extend(sub_qs[sys_res['q2_5']])
+                elif cat == 'esclusioni':
+                    all_qs.extend(sub_qs)
+        
+        # Conta solo domande effettivamente mostrate
+        relevant_qs = [q for q in all_qs if 'condition' in q and check_condition(q['condition'], {**general_responses, **sys_res})]
+        total_qs = len(per_system_qs) + len(set(q['id'] for q in relevant_qs))  # Usa set per evitare duplicati
+        print(f"Total qs for system {sys_idx}: {total_qs}")
+        
+        for q in all_qs:
+            if 'condition' in q and not check_condition(q['condition'], {**general_responses, **sys_res}):
+                continue
+            ans = str(sys_res.get(q['id'], ''))
+            if not ans:  # Tratta valori vuoti come "No" o 0
+                ans = 'No' if q.get('type', 'Sì/No') == 'Sì/No' else '0'
+            if (q.get('type', 'Sì/No') == 'Sì/No' and ans == 'No' and 'Alto gap' in q.get('notes', '')) or \
+               (q.get('type', 'Scala 1-5') == 'Scala 1-5' and ans.isdigit() and int(ans) < 3):
+                gap_info = {
+                    "Gap": q['question'],
+                    "Risposta": ans,
+                    "Azione": extract_action(q.get('notes', '')),
+                    "Priorità": "Alta" if 'Alto gap' in q.get('notes', '') else "Media",
+                    "Tempistica": extract_tempistica(q.get('notes', '')),
+                    "Risk": q.get('risk_flag', 'Low')
+                }
+                sys_gaps.append(gap_info)
+        system_gaps_list.append(sys_gaps)
+    
+    # Percentuali corrette
+    general_pct = max(0, 100 - (len(general_gaps) * 10 / len(general_questions) * 100)) if len(general_questions) > 0 else 100
+    system_scores = [max(0, 100 - (len(gaps) * 10 / total_qs * 100)) for gaps in system_gaps_list] if total_qs > 0 else [100]
+    
+    print(f"General pct: {general_pct}, System scores: {system_scores}")
+    return general_pct, general_gaps, system_scores, system_gaps_list
 
-    # Scoring per sistemi
-    system_scores = []
-    system_gaps = []
-    for i, sys_ans in enumerate(session_state.system_answers):
-        sys_score = 100  # Base 100%
-        sys_count = 0
-        sys_gaps_local = []
-        rischio = sys_ans.get("Qual è il livello di rischio?")
-        ruolo_sistema = sys_ans.get("Quali ruoli ricopre l’organizzazione rispetto al sistema IA?")
-        dimensione = None
-        if "1.2 Qual è la dimensione dell'azienda?" in session_state.answers:
-            dimensione = session_state.answers.get("1.2 Qual è la dimensione dell'azienda?")
-        risk_multiplier = 4 if rischio == "Proibito" else 2 if rischio == "Alto rischio" else 1
-        for q in per_system_qs:
-            ans = sys_ans.get(q["question"])
-            if ans:
-                weight = q.get("score_weight", 1)
-                sys_count += weight
-                if q["type"] == "Sì/No":
-                    if ans == "No" and ("Critico" in q.get("notes", "") or "Alto gap" in q.get("notes", "")):
-                        try:
-                            penalita = float(q.get("notes", "").split("Penalità: -")[1].split("%")[0]) if "Penalità:" in q.get("notes", "") else 10
-                            azione = q.get("notes", "").split("Roadmap: ")[1].split(";")[0] if "Roadmap:" in q.get("notes", "") else "Azione non definita"
-                        except IndexError:
-                            penalita = 10
-                            azione = "Azione default"
-                        penalita_adjusted = penalita * risk_multiplier * (1.5 if ruolo_sistema == "Utilizzatore" and rischio == "Alto rischio" else 1)
-                        if dimensione in ["Micro (<10 dipendenti)", "Piccola (10-50)", "Media (50-250)"]:
-                            penalita_adjusted /= 2
-                        sys_score -= min(penalita_adjusted, sys_score)
-                        prio = "Alta"
-                        tempistica = "Entro 3 mesi"
-                        sys_gaps_local.append({"Gap": q["question"], "Risposta": ans, "Azione": azione, "Priorità": prio, "Tempistica": tempistica, "Risk": q.get("risk_flag", "Low")})
-                elif q["type"] == "Scala 1-5":
-                    if int(ans) < 3 and ("Alto gap" in q.get("notes", "") or "Critico" in q.get("notes", "")):
-                        try:
-                            penalita = float(q.get("notes", "").split("Penalità: -")[1].split("%")[0]) if "Penalità:" in q.get("notes", "") else 10
-                            azione = q.get("notes", "").split("Roadmap: ")[1].split(";")[0] if "Roadmap:" in q.get("notes", "") else "Azione non definita"
-                        except IndexError:
-                            penalita = 10
-                            azione = "Azione default"
-                        penalita_adjusted = penalita * risk_multiplier
-                        if dimensione in ["Micro (<10 dipendenti)", "Piccola (10-50)", "Media (50-250)"]:
-                            penalita_adjusted /= 2
-                        sys_score -= min(penalita_adjusted, sys_score)
-                        prio = "Alta"
-                        tempistica = "Entro 6 mesi"
-                        sys_gaps_local.append({"Gap": q["question"], "Risposta": ans, "Azione": azione, "Priorità": prio, "Tempistica": tempistica, "Risk": q.get("risk_flag", "Low")})
-                elif q["type"] == "Multipla":
-                    if q["question"] == "Qual è il livello di rischio?":
-                        score = weight * 5 if ans == "Minimo" else weight * 3 if ans == "Rischio limitato" else weight * 1
-                        sys_score += score
-                elif q["type"] == "Aperta":
-                    if not ans.strip():
-                        sys_score -= 5
-        # Extra caso d’uso
-        caso_uso = sys_ans.get("Caso d’uso specifico del sistema?")
-        if caso_uso in extra_qs["caso_uso"]:
-            for eq in extra_qs["caso_uso"][caso_uso]:
-                ans = sys_ans.get(eq["question"])
-                if ans is not None:
-                    weight = eq.get("score_weight", 1)
-                    sys_count += weight
-                    if eq["type"] == "Sì/No":
-                        score = weight * 10 if ans == "Sì" else 0
-                        if ans == "No":
-                            try:
-                                penalita = float(eq["notes"].split("Penalità: -")[1].split("%")[0]) if "Penalità:" in eq["notes"] else 10
-                                azione = eq["notes"].split("Roadmap: ")[1].split(";")[0] if "Roadmap:" in eq["notes"] else "Azione non definita"
-                            except IndexError:
-                                penalita = 10
-                                azione = "Azione default"
-                            penalita_adjusted = penalita * risk_multiplier * (1.5 if ruolo_sistema == "Utilizzatore" and rischio == "Alto rischio" else 1)
-                            if dimensione in ["Micro (<10 dipendenti)", "Piccola (10-50)", "Media (50-250)"]:
-                                penalita_adjusted /= 2
-                            sys_score -= min(penalita_adjusted, sys_score)
-                            prio = "Alta"
-                            tempistica = "Immediata (Legge 132/2025)" if "Legge 132/2025" in eq["ref"] else "Entro 3 mesi"
-                            sys_gaps_local.append({"Gap": eq["question"], "Risposta": ans, "Azione": azione, "Priorità": prio, "Tempistica": tempistica, "Risk": eq["risk_flag"]})
-                    elif eq["type"] == "Scala 1-5":
-                        score = weight * int(ans) * 2
-                        if int(ans) < 3 or (int(ans) > 2 and "Critico" in eq["notes"]):
-                            try:
-                                penalita = float(eq["notes"].split("Penalità: -")[1].split("%")[0]) if "Penalità:" in eq["notes"] else 10
-                                azione = eq["notes"].split("Roadmap: ")[1].split(";")[0] if "Roadmap:" in eq["notes"] else "Azione non definita"
-                            except IndexError:
-                                penalita = 10
-                                azione = "Azione default"
-                            penalita_adjusted = penalita * risk_multiplier
-                            if dimensione in ["Micro (<10 dipendenti)", "Piccola (10-50)", "Media (50-250)"]:
-                                penalita_adjusted /= 2
-                            sys_score -= min(penalita_adjusted, sys_score)
-                            prio = "Alta"
-                            tempistica = "Entro 6 mesi"
-                            sys_gaps_local.append({"Gap": eq["question"], "Risposta": ans, "Azione": azione, "Priorità": prio, "Tempistica": tempistica, "Risk": eq["risk_flag"]})
-                        sys_score += score
-        # Extra ruolo
-        if ruolo_sistema in extra_qs["ruolo"]:
-            for eq in extra_qs["ruolo"][ruolo_sistema]:
-                ans = sys_ans.get(eq["question"])
-                if ans is not None:
-                    weight = eq.get("score_weight", 1)
-                    sys_count += weight
-                    if eq["type"] == "Sì/No":
-                        score = weight * 10 if ans == "Sì" else 0
-                        if ans == "No":
-                            try:
-                                penalita = float(eq["notes"].split("Penalità: -")[1].split("%")[0]) if "Penalità:" in eq["notes"] else 10
-                                azione = eq["notes"].split("Roadmap: ")[1].split(";")[0] if "Roadmap:" in eq["notes"] else "Azione non definita"
-                            except IndexError:
-                                penalita = 10
-                                azione = "Azione default"
-                            penalita_adjusted = penalita * risk_multiplier
-                            if dimensione in ["Micro (<10 dipendenti)", "Piccola (10-50)", "Media (50-250)"]:
-                                penalita_adjusted /= 2
-                            sys_score -= min(penalita_adjusted, sys_score)
-                            prio = "Alta"
-                            tempistica = "Entro 3 mesi"
-                            sys_gaps_local.append({"Gap": eq["question"], "Risposta": ans, "Azione": azione, "Priorità": prio, "Tempistica": tempistica, "Risk": eq["risk_flag"]})
-                    elif eq["type"] == "Scala 1-5":
-                        score = weight * int(ans) * 2
-                        if int(ans) < 3:
-                            try:
-                                penalita = float(eq["notes"].split("Penalità: -")[1].split("%")[0]) if "Penalità:" in eq["notes"] else 10
-                                azione = eq["notes"].split("Roadmap: ")[1].split(";")[0] if "Roadmap:" in eq["notes"] else "Azione non definita"
-                            except IndexError:
-                                penalita = 10
-                                azione = "Azione default"
-                            penalita_adjusted = penalita * risk_multiplier
-                            if dimensione in ["Micro (<10 dipendenti)", "Piccola (10-50)", "Media (50-250)"]:
-                                penalita_adjusted /= 2
-                            sys_score -= min(penalita_adjusted, sys_score)
-                            prio = "Alta"
-                            tempistica = "Entro 6 mesi"
-                            sys_gaps_local.append({"Gap": eq["question"], "Risposta": ans, "Azione": azione, "Priorità": prio, "Tempistica": tempistica, "Risk": eq["risk_flag"]})
-                        sys_score += score
-        sys_pct = max(0, min(100, sys_score)) if sys_count else 0
-        system_scores.append(sys_pct)
-        if sys_gaps_local:
-            system_gaps.append({"Sistema": i+1, "Gaps": sys_gaps_local})
-    return general_pct, general_gaps, system_scores, system_gaps
+def extract_action(notes):
+    if "Azione" in notes:
+        return notes.split("Azione")[1].split(".")[0].strip()
+    return "Azione non specificata"
+
+def extract_tempistica(notes):
+    if "entro" in notes:
+        return notes.split("entro")[1].split(".")[0].strip()
+    return "Non specificata"
+
+def check_condition(condition, responses):
+    if isinstance(condition, bool):
+        return condition
+    if isinstance(condition, list):
+        return any(check_condition(c, responses) for c in condition)
+    if not isinstance(condition, dict):
+        return False
+    for key, value in condition.items():
+        res_val = responses.get(key)
+        if isinstance(value, list):
+            if res_val not in value:
+                return False
+        elif res_val != value:
+            return False
+    return True
