@@ -197,7 +197,7 @@
         },
         {
           "id": "q2_19",
-          "question": "2.19: Hai valutato l'impatto su salute/sicurezza? (1 = Nessun impatto, 5 = Impatto significativo)",
+          "question": "2.19: Hai valutato l’impatto su salute/sicurezza? (1 = Nessun impatto, 5 = Impatto significativo)",
           "type": "Scala 1-5",
           "ref": "AI Act Art. 9",
           "notes": "Cosa significa? Valuta rischi per salute. Esempi: 5 per AI in chirurgia. Scoring: Alto gap se < 3. Penalità: -15% se < 3.",
@@ -336,7 +336,7 @@
       "Infrastrutture critiche/Monitoraggio": [
         {
           "id": "q2_40_infra",
-          "question": "2.40: Sono implementate misure per garantire robustezza contro errori/attacchi e accuratezza nei risultati? (Art. 15)",
+          "question": "2.40: Sono implementate misure per garantire robustezza contro errori/attacchi? (Art. 15)",
           "type": "Sì/No",
           "notes": "Cosa significa? Garanzie contro malfunzionamenti o attacchi. Esempi: Redundancy per errori. Scoring: Alto gap se No. Penalità: -15%.",
           "score_weight": 2,
@@ -348,7 +348,7 @@
       "Componenti di sicurezza/Autenticazione": [
         {
           "id": "q2_40_comp",
-          "question": "2.40: Sono implementate misure per garantire robustezza contro errori/attacchi e accuratezza nei risultati? (Art. 15)",
+          "question": "2.40: Sono implementate misure per garantire robustezza contro errori/attacchi? (Art. 15)",
           "type": "Sì/No",
           "notes": "Cosa significa? Garanzie contro malfunzionamenti o attacchi. Esempi: Redundancy per errori. Scoring: Alto gap se No. Penalità: -15%.",
           "score_weight": 2,
@@ -832,17 +832,17 @@
         },
         {
           "id": "q2_42",
-          "question": "2.42: Hai valutato impatto su diritti fondamentali (es. democracy, rule of law, Art. 9)?",
+          "question": "2.42: Hai valutato impatto su diritti fondamentali? (1 = Nessuno, 5 = Alto)",
           "type": "Scala 1-5",
           "notes": "Cosa significa? Valuta l’impatto su diritti (1 = Nessuno, 5 = Alto). Esempi: 5 per prohibited practices. Scoring: Alto gap se <3. Penalità: -20% se <3.",
           "score_weight": 2,
           "risk_flag": "High",
           "condition": {"q2_8": "Alto rischio"},
-          "references": [{"source": "Guidelines Prohibited page 18", "snippet": "Impact on fundamental rights in prohibited practices."}]
+          "references": [{"source": "AI Act Art. 9", "snippet": "Valutazione impatto su diritti fondamentali."}]
         },
         {
           "id": "q2_44",
-          "question": "2.44: Lifecycle del model documentato (Guidelines Scope p.8)?",
+          "question": "2.44: Lifecycle del model documentato?",
           "type": "Sì/No",
           "notes": "Cosa significa? Documentazione del ciclo di vita. Esempi: Da training a deployment. Scoring: Medio gap se No. Penalità: -10%.",
           "score_weight": 1,
@@ -852,7 +852,7 @@
         },
         {
           "id": "q2_45",
-          "question": "2.45: Model Documentation Form compilato (Code Transparency p.2)?",
+          "question": "2.45: Model Documentation Form compilato?",
           "type": "Sì/No",
           "notes": "Cosa significa? Formulario di trasparenza. Esempi: Per downstream providers. Scoring: Alto gap se No. Penalità: -15%.",
           "score_weight": 2,
@@ -862,7 +862,7 @@
         },
         {
           "id": "q2_46",
-          "question": "2.46: Hai aderito a Code of Practice adeguato (Art. 56)?",
+          "question": "2.46: Hai aderito a Code of Practice adeguato?",
           "type": "Sì/No",
           "notes": "Cosa significa? Adesione a codici di pratica. Esempi: Per GPAI systemic. Scoring: Medio gap se No. Penalità: -10%.",
           "score_weight": 1,
@@ -872,7 +872,7 @@
         },
         {
           "id": "q2_47",
-          "question": "2.47: Hai notificato systemic risk all'AI Office (Guidelines Scope p.11)?",
+          "question": "2.47: Hai notificato systemic risk all'AI Office?",
           "type": "Sì/No",
           "notes": "Cosa significa? Notifica obbligatoria per rischi sistemici. Esempi: Per >10^25 FLOPs. Scoring: Critico se No. Penalità: -25%.",
           "score_weight": 3,
@@ -932,8 +932,8 @@
     },
     "esclusioni": [
       {
-        "id": "q2_43",
-        "question": "2.43: Il sistema beneficia di esclusioni (es. R&D non commerciale, national security, open-source senza monetizzazione, Art. 2)?",
+        "id": "q2_97",
+        "question": "2.97: Il sistema beneficia di esclusioni (es. R&D non commerciale, Art. 2)?",
         "type": "Sì/No",
         "notes": "Cosa significa? Esenzioni da obblighi AI Act. Esempi: Sì per R&D puro. Scoring: Bonus se Sì (+10%).",
         "score_weight": 1,
