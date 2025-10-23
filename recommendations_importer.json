@@ -1,0 +1,8 @@
+{
+  "recommendations": [
+    {"question_id": "q2_11_imp", "condition": "risposta = 'No'", "recommendation": "Verificare marcatura CE del sistema importato.", "priority": "Alta", "timeline": "Immediata", "reference": "Art. 16 AI Act", "benefits": "Conformità importazione, evita sequestri"},
+    {"question_id": "q2_27", "condition": "risposta = 'No'", "recommendation": "Verificare conformità del provider con audit.", "priority": "Alta", "timeline": "Q1 2025", "reference": "Art. 16 AI Act", "benefits": "Due diligence, qualità"},
+    {"question_id": "q2_32", "condition": "risposta = 'No'", "recommendation": "Nominare referente UE per operatori extra-UE.", "priority": "Alta", "timeline": "Q1 2025", "reference": "Art. 25 AI Act", "benefits": "Rappresentanza legale, conformità"},
+    {"question_id": "q2_87_imp", "condition": "risposta = 'No'", "recommendation": "Verificare marcatura CE visibile sul prodotto.", "priority": "Alta", "timeline": "Immediata", "reference": "Art. 24 AI Act", "benefits": "Conformità visiva, evita sanzioni"}
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "recommendations": [
+    {"question_id":"q1_3","condition":"risposta = 'No'","recommendation":"Formare il personale su AI Act e rischi di utilizzo.","priority":"Alta","timeline":"Q1 2025","reference":"Art. 4 AI Act","benefits":"Competenza interna, riduzione errori"},
+    {"question_id":"q1_4","condition":"risposta = 'No'","recommendation":"Nominare un referente per conformità AI (es. DPO esteso).","priority":"Alta","timeline":"Q2 2025","reference":"Art. 4 AI Act","benefits":"Accountability, coordinamento"},
+    {"question_id":"q1_6","condition":"risposta = 'No'","recommendation":"Istituire comitato di supervisione sull'uso AI.","priority":"Media","timeline":"Q3 2025","reference":"Art. 29 AI Act","benefits":"Governance uso, trasparenza"},
+    {"question_id":"q1_7","condition":"risposta = 'No'","recommendation":"Nominare AI Compliance Officer per monitoraggio uso.","priority":"Alta","timeline":"Q2 2025","reference":"Art. 29 AI Act","benefits":"Monitoraggio continuo, conformità"},
+    {"question_id":"q2_13_user","condition":"risposta = 'No'","recommendation":"Attivare oversight umano sulle decisioni AI.","priority":"Alta","timeline":"Immediata","reference":"Art. 29 AI Act","benefits":"Controllo umano, sicurezza"},
+    {"question_id":"q2_22_user","condition":"risposta = 'No'","recommendation":"Attivare e monitorare logging delle decisioni AI.","priority":"Alta","timeline":"Q1 2025","reference":"Art. 12 AI Act","benefits":"Tracciabilità, audit"},
+    {"question_id":"q2_27","condition":"risposta = 'No'","recommendation":"Verificare conformità del provider con audit.","priority":"Alta","timeline":"Q2 2025","reference":"Art. 16 AI Act","benefits":"Due diligence, qualità"},
+    {"question_id":"q2_31","condition":"risposta = 'No'","recommendation":"Condurre FRIA per uso in ambito pubblico.","priority":"Alta","timeline":"Q1 2025","reference":"Art. 9a AI Act","benefits":"Protezione diritti, conformità"},
+    {"question_id":"q2_50","condition":"risposta = 'No'","recommendation":"Organizzare formazione annuale su AI Act per utenti.","priority":"Media","timeline":"Q4 2025","reference":"Art. 4 AI Act","benefits":"Literacy AI, conformità"},
+    {"question_id":"q2_23","condition":"risposta = 'No'","recommendation":"Informare lavoratori sull'uso di AI.","priority":"Media","timeline":"Q1 2025","reference":"Art. 13 AI Act","benefits":"Trasparenza, fiducia"},
+    {"question_id":"q2_69_user","condition":"risposta = 'No'","recommendation":"Attivare fallback umano in decisioni critiche.","priority":"Alta","timeline":"Immediata","reference":"Art. 14 AI Act","benefits":"Sicurezza, controllo"},
+    {"question_id":"q2_29_user","condition":"risposta = 'No'","recommendation":"Monitorare tracciabilità dati e decisioni.","priority":"Alta","timeline":"Q1 2025","reference":"Art. 12 AI Act","benefits":"Accountability, audit"},
+    {"question_id":"q2_20","condition":"risposta = 'Sì'","recommendation":"Verificare autorizzazioni per uso pubblico.","priority":"Alta","timeline":"Immediata","reference":"Art. 6 AI Act","benefits":"Legalità, conformità"},
+    {"question_id":"q2_18","condition":"risposta = 'Sì'","recommendation":"Condurre DPIA per dati sensibili.","priority":"Alta","timeline":"Q1 2025","reference":"GDPR + AI Act","benefits":"Protezione dati, conformità"},
+    {"question_id":"q2_42","condition":"risposta < 3","recommendation":"Mitigare impatto su diritti fondamentali.","priority":"Alta","timeline":"Q1 2025","reference":"Art. 9 AI Act","benefits":"Etica, protezione"}
+  ]
+}

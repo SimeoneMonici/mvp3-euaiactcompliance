@@ -1,0 +1,40 @@
+{
+  "recommendations": [
+    {
+      "question_id": "q1_3",
+      "condition": "risposta = 'No'",
+      "recommendation": "Creare un team dedicato alla gestione IA con competenze in data science e MLOps.",
+      "priority": "Alta",
+      "timeline": "Q3 2025",
+      "reference": "Art. 17 AI Act",
+      "benefits": "Migliora capacità interna."
+    },
+    {
+      "question_id": "q1_5",
+      "condition": "risposta = 'No'",
+      "recommendation": "Redigere una strategia documentata per l'IA con obiettivi triennali.",
+      "priority": "Alta",
+      "timeline": "Q4 2025",
+      "reference": "Art. 4 AI Act",
+      "benefits": "Allinea l'IA agli obiettivi aziendali."
+    },
+    {
+      "question_id": "q1_6",
+      "condition": "risposta = 'No'",
+      "recommendation": "Istituire un comitato di governance IA.",
+      "priority": "Alta",
+      "timeline": "Q4 2025",
+      "reference": "Art. 17 AI Act",
+      "benefits": "Centralizza il controllo."
+    },
+    {
+      "question_id": "q1_7",
+      "condition": "risposta = 'No'",
+      "recommendation": "Nominare un AI Compliance Officer.",
+      "priority": "Media",
+      "timeline": "Q2 2025",
+      "reference": "Art. 4 AI Act",
+      "benefits": "Monitoraggio continuo."
+    }
+  ]
+}

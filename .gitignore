@@ -1,3 +1,14 @@
-".streamlit" 
-"__pycache__/" 
-"*.pyc" 
+# Streamlit
+.streamlit/
+streamlit/
+
+# Python cache
+__pycache__/
+*.pyc
+
+# DevContainer (opzionale, ma consigliato)
+.devcontainer/
+.vscode/
+
+# OS
+.DS_Store

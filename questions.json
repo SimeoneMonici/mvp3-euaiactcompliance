@@ -1,990 +1,143 @@
 {
   "questions": [
-    {
-      "id": "q1_1",
-      "section": "1. Profilo Aziendale",
-      "question": "1.1: Qual è il settore principale dell'azienda?",
-      "type": "Multipla",
-      "ref": "AI Act Art. 6 + Annex III",
-      "notes": "Cosa significa? Identifica il contesto normativo e determina se il settore è critico (es. Sanità) o escluso (es. Difesa). Esempi: Finanza per scoring creditizio, Sanità per biometria.",
-      "options": ["Finanza", "Sanità", "Istruzione", "Forze dell'ordine", "Immigrazione", "Infrastrutture critiche", "Componenti di sicurezza", "Giustizia", "Difesa/Militare", "Sicurezza Nazionale", "Altro"],
-      "score_weight": 1,
-      "risk_flag": "N/A",
-      "references": [{"source": "AI Act Art. 6 + Annex III", "snippet": "Classificazione rischio e settori critici."}]
-    },
-    {
-      "id": "q1_2",
-      "section": "1. Profilo Aziendale",
-      "question": "1.2: Qual è la dimensione dell'azienda?",
-      "type": "Multipla",
-      "ref": "AI Act Art. 69",
-      "notes": "Cosa significa? Determina obblighi specifici (es. PMI vs Grande) con agevolazioni per PMI come multe ridotte. Esempi: Micro per startup, Grande per multinazionali.",
-      "options": ["Micro (<10 dipendenti)", "Piccola (10-50)", "Media (50-250)", "Grande (>250)"],
-      "score_weight": 1,
-      "risk_flag": "N/A",
-      "references": [{"source": "AI Act Art. 69", "snippet": "Agevolazioni per PMI, obblighi ridotti."}]
-    },
-    {
-      "id": "q1_3",
-      "section": "1. Profilo Aziendale",
-      "question": "1.3: L’azienda dispone di un team o competenze dedicate alla gestione IA (es. data science, MLOps)?",
-      "type": "Sì/No",
-      "ref": "AI Act Art. 17",
-      "notes": "Cosa significa? Team per qualità e conformità. Scoring: Basso se no. Alto gap se no. Esempi: Data scientist per bias, MLOps per deployment.",
-      "score_weight": 1,
-      "risk_flag": "Low",
-      "references": [{"source": "AI Act Art. 17", "snippet": "Obblighi per team di gestione qualità e conformità."}]
-    },
-    {
-      "id": "q1_4",
-      "section": "1. Profilo Aziendale",
-      "question": "1.4: Chi è il referente per la conformità normativa (es. DPO o equivalente)?",
-      "type": "Aperta",
-      "ref": "AI Act Art. 17",
-      "notes": "Cosa significa? Responsabile per audit. Scoring: Low gap se non specificato. Esempi: DPO per GDPR, AI Officer per AI Act.",
-      "score_weight": 1,
-      "risk_flag": "Low",
-      "references": [{"source": "AI Act Art. 17", "snippet": "Designazione di responsabili per conformità."}]
-    },
-    {
-      "id": "q1_5",
-      "section": "1. Profilo Aziendale",
-      "question": "1.5: L’azienda ha una strategia documentata per l’IA?",
-      "type": "Sì/No",
-      "ref": "AI Act Art. 4",
-      "notes": "Cosa significa? Piano per sviluppo etico. Scoring: Basso se no. Alto gap se no. Esempi: Strategia per GPAI o high-risk.",
-      "score_weight": 1,
-      "risk_flag": "Low",
-      "references": [{"source": "AI Act Art. 4", "snippet": "Strategie documentate per lo sviluppo IA."}]
-    },
-    {
-      "id": "q1_6",
-      "section": "1. Profilo Aziendale",
-      "question": "1.6: Esiste una governance formalizzata per l’IA (es. comitato o processi)?",
-      "type": "Sì/No",
-      "ref": "AI Act Art. 17",
-      "notes": "Cosa significa? Processi per oversight. Scoring: Basso se no. Alto gap se no. Esempi: Comitato etico per bias.",
-      "score_weight": 1,
-      "risk_flag": "Low",
-      "references": [{"source": "AI Act Art. 17", "snippet": "Governance formale per sistemi IA."}]
-    },
-    {
-      "id": "q1_7",
-      "section": "1. Profilo Aziendale",
-      "question": "1.7: È nominato un AI Compliance Officer?",
-      "type": "Sì/No",
-      "ref": "AI Act Art. 4",
-      "notes": "Cosa significa? Responsabile dedicato. Scoring: Medio se no. Penalità: -10%. Esempi: Officer per FRIA o assessment.",
-      "score_weight": 1,
-      "risk_flag": "Medium",
-      "references": [{"source": "AI Act Art. 4", "snippet": "Nomina di un responsabile conformità."}]
-    }
+    {"id": "q1_1", "section": "1. Profilo Aziendale", "question": "1.1: Qual è il settore principale dell'azienda?", "type": "Drop down", "options": ["Difesa/Militare (excluded Art.2(3))", "Sicurezza Nazionale (excluded Art.2(3))", "Finanza", "Sanità", "Forze dell'ordine", "Immigrazione", "Infrastrutture critiche", "Giustizia", "Altro"], "ref": "AI Act Art. 2", "notes": "Esclusioni per difesa/sicurezza.", "score_weight": 1, "risk_flag": "N/A"},
+    {"id": "q1_2", "section": "1. Profilo Aziendale", "question": "1.2: Qual è la dimensione dell'azienda?", "type": "Drop down", "options": ["Piccola (<50)", "Media (50-250)", "Grande (>250)"], "ref": "AI Act Art. 69", "notes": "PMI agevolazioni.", "score_weight": 1, "risk_flag": "N/A"},
+    {"id": "q1_3", "section": "1. Profilo Aziendale", "question": "1.3: L’azienda dispone di un team o competenze dedicate alla gestione IA (es. data science, MLOps)?", "type": "Sì/No", "ref": "AI Act Art. 17", "notes": "Team obbligatorio per qualità.", "score_weight": 1, "risk_flag": "High"},
+    {"id": "q1_4", "section": "1. Profilo Aziendale", "question": "1.4: L’azienda ha un referente tecnico per la conformità normativa (es. DPO esteso a IA)?", "type": "Sì/No", "ref": "AI Act Art. 4", "notes": "Referente accountability.", "score_weight": 1, "risk_flag": "High"},
+    {"id": "q1_5", "section": "1. Profilo Aziendale", "question": "1.5: L’azienda ha una strategia documentata per l’IA (es. obiettivi, etica)?", "type": "Sì/No", "ref": "AI Act Art. 4", "notes": "Strategia triennale.", "score_weight": 1, "risk_flag": "High"},
+    {"id": "q1_6", "section": "1. Profilo Aziendale", "question": "1.6: L’azienda ha una governance specifica per l’IA (es. comitato)?", "type": "Sì/No", "ref": "AI Act Art. 17", "notes": "Comitato legal/tech.", "score_weight": 1, "risk_flag": "High"},
+    {"id": "q1_7", "section": "1. Profilo Aziendale", "question": "1.7: L’azienda ha nominato un AI Compliance Officer?", "type": "Sì/No", "ref": "AI Act Art. 4", "notes": "Ruolo dedicato monitoraggio.", "score_weight": 1, "risk_flag": "High"}
   ],
   "per_system_qs": [
-    {
-      "id": "q2_1",
-      "question": "2.1: Nome",
-      "type": "Aperta",
-      "notes": "Cosa significa? Nome unico per tracciabilità. Esempi: 'Sistema di Scoring Creditizio'.",
-      "references": [{"source": "AI Act Art. 3", "snippet": "Identificazione dei sistemi IA."}]
-    },
-    {
-      "id": "q2_2",
-      "question": "2.2: Descrizione",
-      "type": "Aperta",
-      "notes": "Cosa significa? Spiega come funziona. Esempi: 'AI per analisi dati sanitari'.",
-      "references": [{"source": "AI Act Art. 3", "snippet": "Descrizione funzionale dei sistemi."}]
-    },
-    {
-      "id": "q2_3",
-      "question": "2.3: Funzione",
-      "type": "Aperta",
-      "notes": "Cosa significa? Scopo primario. Esempi: 'Riconoscimento facciale'.",
-      "references": [{"source": "AI Act Art. 3", "snippet": "Funzioni principali dei sistemi IA."}]
-    },
-    {
-      "id": "q2_4",
-      "question": "2.4: Quali ruoli ricopre l’organizzazione rispetto al sistema IA? (es. sviluppatore, utilizzatore, importatore)",
-      "type": "Multipla",
-      "notes": "Cosa significa? Ruolo determina responsabilità. Esempi: Sviluppatore per assessment rischio.",
-      "options": ["Sviluppatore", "Utilizzatore", "Importatore", "Distributore", "Rappresentante", "Altro"],
-      "score_weight": 1,
-      "risk_flag": "N/A",
-      "references": [{"source": "AI Act Art. 3", "snippet": "Definizione dei ruoli (sviluppatore, utilizzatore, etc.)."}]
-    },
-    {
-      "id": "q2_5",
-      "question": "2.5: Caso d’uso specifico del sistema?",
-      "type": "Multipla",
-      "notes": "Cosa significa? Classifica uso per rischio. Esempi: Recruitment per HR AI.",
-      "options": ["Sanità/Biometria", "Sicurezza pubblica", "Recruitment", "Finanza/Scoring creditizio", "Istruzione/Valutazione studenti", "Forze dell'ordine/Sorveglianza", "Immigrazione/Riconoscimento", "Infrastrutture critiche/Monitoraggio", "Componenti di sicurezza/Autenticazione", "Giustizia/Analisi legale", "Altro"],
-      "score_weight": 1,
-      "risk_flag": "N/A",
-      "references": [{"source": "AI Act Art. 6", "snippet": "Classificazione rischio basata su casi d’uso."}]
-    },
-    {
-      "id": "q2_6",
-      "question": "2.6: Il sistema influisce su diritti o sicurezza?",
-      "type": "Scala 1-5",
-      "notes": "Cosa significa? Valuta l’impatto sui diritti umani o la sicurezza fisica (1 = Nessun impatto, 5 = Impatto significativo). Esempi: 5 per biometria in sanità. Scoring: Alto gap se < 3. Penalità: -15% se < 3.",
-      "score_weight": 1,
-      "risk_flag": "Medium",
-      "references": [{"source": "AI Act Art. 9", "snippet": "Valutazione impatto su diritti e sicurezza."}]
-    },
-    {
-      "id": "q2_7",
-      "question": "2.7: Il sistema utilizza dati biometrici o è destinato all'enforcement?",
-      "type": "Multipla",
-      "notes": "Cosa significa? Verifica se l’AI usa dati sensibili o è usata per controlli di polizia. Esempi: Biometria per riconoscimento facciale. Scoring: Alto gap se 'Sì, utilizza dati biometrici' o 'Sì, destinato all'enforcement'. Penalità: -20%.",
-      "options": ["No (nessun uso)", "Sì, utilizza dati biometrici", "Sì, destinato all'enforcement", "Sì, entrambi"],
-      "score_weight": 2,
-      "risk_flag": "High",
-      "references": [{"source": "AI Act Art. 5", "snippet": "Proibizioni su dati biometrici senza autorizzazione."}]
-    },
-    {
-      "id": "q2_8",
-      "question": "2.8: Qual è il livello di rischio?",
-      "type": "Multipla",
-      "notes": "Cosa significa? Classifica l’AI in base a normative UE. Esempi: Alto rischio per sanità. Determina moltiplicatore di rischio.",
-      "options": ["Proibito", "Alto rischio", "Rischio limitato", "Minimo"],
-      "score_weight": 1,
-      "risk_flag": "N/A",
-      "references": [{"source": "AI Act Art. 6-7", "snippet": "Classificazione livelli di rischio."}]
-    }
+    {"id": "q2_1", "section": "2. Inventory Sistemi IA", "question": "2.1: Nome del sistema IA", "type": "Testo libero", "ref": "AI Act Art. 11", "notes": "Nome univoco.", "score_weight": 1, "risk_flag": "N/A"},
+    {"id": "q2_2", "section": "2. Inventory Sistemi IA", "question": "2.2: Descrizione del sistema IA", "type": "Testo libero", "ref": "AI Act Art. 11", "notes": "Scopo, input, output.", "score_weight": 1, "risk_flag": "N/A"},
+    {"id": "q2_3", "section": "2. Inventory Sistemi IA", "question": "2.3: Funzione principale del sistema IA", "type": "Testo libero", "ref": "AI Act Art. 6", "notes": "Es. scoring creditizio.", "score_weight": 1, "risk_flag": "N/A"},
+    {"id": "q2_4", "section": "2. Inventory Sistemi IA", "question": "2.4: Ruolo dell'azienda nel sistema IA", "type": "Drop down", "options": ["Sviluppatore", "Utilizzatore", "Importatore", "Distributore"], "ref": "AI Act Art. 3", "notes": "Determina obblighi.", "score_weight": 1, "risk_flag": "N/A"},
+    {"id": "q2_5", "section": "2. Inventory Sistemi IA", "question": "2.5: Caso d'uso specifico del sistema IA", "type": "Drop down", "options": ["Sanità/Biometria", "Finanza/Scoring", "Forze Ordine", "Immigrazione", "Infrastrutture critiche", "Giustizia", "Istruzione", "Altro"], "ref": "AI Act Annex III", "notes": "High-risk se in Annex III.", "score_weight": 1, "risk_flag": "N/A"},
+    {"id": "q2_8", "section": "2. Inventory Sistemi IA", "question": "2.8: Livello di rischio percepito del sistema?", "type": "Drop down", "options": ["Proibito", "Alto", "Rischio limitato", "Minimo"], "ref": "AI Act Art. 6", "notes": "Classificazione preliminare.", "score_weight": 1, "risk_flag": "N/A"},
+    {"id": "q2_9", "section": "2. Inventory Sistemi IA", "question": "2.9: Qualità dei dati di training (scala 1-5)? (Art. 10)", "type": "Scala 1-5", "ref": "AI Act Art. 10", "notes": "Bassa qualità/bias.", "score_weight": 1, "risk_flag": "Medium", "condition": {"q2_4": "Sviluppatore"}},
+    {"id": "q2_10", "section": "2. Inventory Sistemi IA", "question": "2.10: Il sistema ha misure di cybersecurity? (Art. 15)", "type": "Sì/No", "ref": "AI Act Art. 15", "notes": "ISO 27001.", "score_weight": 1, "risk_flag": "High", "condition": {"q2_4": "Sviluppatore", "q2_8": "Alto"}},
+    {"id": "q2_11", "section": "2. Inventory Sistemi IA", "question": "2.11: Il sistema è soggetto a marcatura CE? (Art. 16)", "type": "Sì/No", "ref": "AI Act Art. 16", "notes": "Obbligatorio high-risk.", "score_weight": 1, "risk_flag": "High", "condition": {"q2_4": "Sviluppatore", "q2_8": "Alto"}},
+    {"id": "q2_11_imp", "section": "2. Inventory Sistemi IA", "question": "2.11: Hai verificato la marcatura CE? (Art. 16)", "type": "Sì/No", "ref": "AI Act Art. 16", "notes": "Verifica importatore.", "score_weight": 1, "risk_flag": "High", "condition": {"q2_4": ["Importatore", "Distributore"], "q2_8": "Alto"}},
+    {"id": "q2_12", "section": "2. Inventory Sistemi IA", "question": "2.12: Valutazione impatto privacy (DPIA) condotta? (GDPR + Art. 9)", "type": "Sì/No", "ref": "GDPR + AI Act Art. 9", "notes": "Dati personali.", "score_weight": 1, "risk_flag": "High", "condition": {"q2_18": "Sì"}},
+    {"id": "q2_13_dev", "section": "2. Inventory Sistemi IA", "question": "2.13: Il sistema permette oversight umano? (Art. 14)", "type": "Sì/No", "ref": "AI Act Art. 14", "notes": "Interfaccia override.", "score_weight": 1, "risk_flag": "High", "condition": {"q2_4": "Sviluppatore", "q2_8": "Alto"}},
+    {"id": "q2_13_user", "section": "2. Inventory Sistemi IA", "question": "2.13: Hai attivato oversight umano? (Art. 29)", "type": "Sì/No", "ref": "AI Act Art. 29", "notes": "Uso override.", "score_weight": 1, "risk_flag": "High", "condition": {"q2_4": "Utilizzatore", "q2_8": "Alto"}},
+    {"id": "q2_14", "section": "2. Inventory Sistemi IA", "question": "2.14: Il sistema è un modello GPAI? (Art. 53)", "type": "Sì/No", "ref": "AI Act Art. 53", "notes": "Obblighi transparency.", "score_weight": 1, "risk_flag": "High"},
+    {"id": "q2_15", "section": "2. Inventory Sistemi IA", "question": "2.15: Il modello GPAI ha rischi sistemici (FLOPs >10^25)? (Art. 55)", "type": "Sì/No", "ref": "AI Act Art. 55", "notes": "Notifica AI Office.", "score_weight": 1, "risk_flag": "High", "condition": {"q2_14": "Sì"}},
+    {"id": "q2_16", "section": "2. Inventory Sistemi IA", "question": "2.16: Il sistema usa tecniche di manipolazione subliminale? (Art. 5)", "type": "Sì/No", "ref": "AI Act Art. 5", "notes": "Proibito.", "score_weight": 1, "risk_flag": "Critical"},
+    {"id": "q2_18", "section": "2. Inventory Sistemi IA", "question": "2.18: Il sistema tratta dati sensibili (GDPR Art.9)? (Art. 10)", "type": "Sì/No", "ref": "AI Act Art. 10", "notes": "Bias mitigation.", "score_weight": 1, "risk_flag": "High"},
+    {"id": "q2_19", "section": "2. Inventory Sistemi IA", "question": "2.19: Impatto su salute/sicurezza (scala 1-5)? (Art. 9)", "type": "Scala 1-5", "ref": "AI Act Art. 9", "notes": "Critico se <3.", "score_weight": 1, "risk_flag": "High"},
+    {"id": "q2_20", "section": "2. Inventory Sistemi IA", "question": "2.20: Il sistema è usato in ambito pubblico? (Art. 6)", "type": "Sì/No", "ref": "AI Act Art. 6", "notes": "High-risk pubblica amm.", "score_weight": 1, "risk_flag": "Medium"},
+    {"id": "q2_22_dev", "section": "2. Inventory Sistemi IA", "question": "2.22: Il sistema permette logging completo? (Art. 12)", "type": "Sì/No", "ref": "AI Act Art. 12", "notes": "Fornitura capacità logging.", "score_weight": 1, "risk_flag": "High", "condition": {"q2_4": "Sviluppatore", "q2_8": "Alto"}},
+    {"id": "q2_22_user", "section": "2. Inventory Sistemi IA", "question": "2.22: Hai attivato e monitori il logging? (Art. 29)", "type": "Sì/No", "ref": "AI Act Art. 29", "notes": "Monitoraggio uso.", "score_weight": 1, "risk_flag": "High", "condition": {"q2_4": "Utilizzatore", "q2_8": "Alto"}},
+    {"id": "q2_23", "section": "2. Inventory Sistemi IA", "question": "2.23: Informativa ai lavoratori sull'uso di AI? (Art. 13)", "type": "Sì/No", "ref": "AI Act Art. 13", "notes": "Transparency workplace.", "score_weight": 1, "risk_flag": "Medium"},
+    {"id": "q2_24", "section": "2. Inventory Sistemi IA", "question": "2.24: Sistema di gestione qualità implementato? (Art. 17)", "type": "Sì/No", "ref": "AI Act Art. 17", "notes": "ISO 9001.", "score_weight": 1, "risk_flag": "High", "condition": {"q2_4": "Sviluppatore", "q2_8": "Alto"}},
+    {"id": "q2_25", "section": "2. Inventory Sistemi IA", "question": "2.25: Documentazione tecnica completa e aggiornata? (Art. 11)", "type": "Sì/No", "ref": "AI Act Art. 11", "notes": "Per audit.", "score_weight": 1, "risk_flag": "Medium"},
+    {"id": "q2_26", "section": "2. Inventory Sistemi IA", "question": "2.26: Assessment di rischio formale condotto? (Art. 9)", "type": "Sì/No", "ref": "AI Act Art. 9", "notes": "Obbligatorio high-risk.", "score_weight": 1, "risk_flag": "Critical", "condition": {"q2_4": "Sviluppatore", "q2_8": "Alto"}},
+    {"id": "q2_27", "section": "2. Inventory Sistemi IA", "question": "2.27: Qualità del provider verificata? (Art. 16)", "type": "Sì/No", "ref": "AI Act Art. 16", "notes": "Due diligence.", "score_weight": 1, "risk_flag": "Medium", "condition": {"q2_4": ["Utilizzatore", "Importatore"]}},
+    {"id": "q2_28", "section": "2. Inventory Sistemi IA", "question": "2.28: Notifica alle autorità per high-risk? (Art. 22)", "type": "Sì/No", "ref": "AI Act Art. 22", "notes": "Entro 3 mesi.", "score_weight": 1, "risk_flag": "High", "condition": {"q2_4": "Sviluppatore", "q2_8": "Alto"}},
+    {"id": "q2_29_dev", "section": "2. Inventory Sistemi IA", "question": "2.29: Il sistema permette tracciabilità dati/decisione? (Art. 12)", "type": "Sì/No", "ref": "AI Act Art. 12", "notes": "Logging high-risk.", "score_weight": 1, "risk_flag": "Medium", "condition": {"q2_4": "Sviluppatore", "q2_8": "Alto"}},
+    {"id": "q2_29_user", "section": "2. Inventory Sistemi IA", "question": "2.29: Monitori tracciabilità dati/decisione? (Art. 29)", "type": "Sì/No", "ref": "AI Act Art. 29", "notes": "Monitoraggio uso.", "score_weight": 1, "risk_flag": "Medium", "condition": {"q2_4": "Utilizzatore", "q2_8": "Alto"}},
+    {"id": "q2_30", "section": "2. Inventory Sistemi IA", "question": "2.30: Notifica ai fornitori su modifiche al sistema? (Art. 28)", "type": "Sì/No", "ref": "AI Act Art. 28", "notes": "Per distributori.", "score_weight": 1, "risk_flag": "Medium", "condition": {"q2_4": "Distributore"}},
+    {"id": "q2_31", "section": "2. Inventory Sistemi IA", "question": "2.31: FRIA (Fundamental Rights Impact Assessment) condotta? (Art. 9a)", "type": "Sì/No", "ref": "AI Act Art. 9a", "notes": "Uso pubblico.", "score_weight": 1, "risk_flag": "High", "condition": {"q2_4": "Utilizzatore", "q2_20": "Sì"}},
+    {"id": "q2_32", "section": "2. Inventory Sistemi IA", "question": "2.32: Referente UE nominato per operatori extra-UE? (Art. 25)", "type": "Sì/No", "ref": "AI Act Art. 25", "notes": "Importatori non-UE.", "score_weight": 1, "risk_flag": "High", "condition": {"q2_4": "Importatore"}},
+    {"id": "q2_33", "section": "2. Inventory Sistemi IA", "question": "2.33: Policy copyright per dati di training implementata? (Art. 10)", "type": "Sì/No", "ref": "AI Act Art. 10", "notes": "Licenze dati.", "score_weight": 1, "risk_flag": "Medium", "condition": {"q2_4": "Sviluppatore"}},
+    {"id": "q2_34", "section": "2. Inventory Sistemi IA", "question": "2.34: Autorizzazioni per high-risk ottenute? (Art. 43)", "type": "Sì/No", "ref": "AI Act Art. 43", "notes": "Conformity assessment.", "score_weight": 1, "risk_flag": "Critical", "condition": {"q2_4": "Sviluppatore", "q2_8": "Alto"}},
+    {"id": "q2_35", "section": "2. Inventory Sistemi IA", "question": "2.35: Secondo assessment di rischio eseguito? (Art. 9)", "type": "Sì/No", "ref": "AI Act Art. 9", "notes": "Ogni 2 anni.", "score_weight": 1, "risk_flag": "High", "condition": {"q2_4": "Sviluppatore", "q2_8": "Alto"}},
+    {"id": "q2_36", "section": "2. Inventory Sistemi IA", "question": "2.36: Tecnologie proibite evitate? (Art. 5)", "type": "Sì/No", "ref": "AI Act Art. 5", "notes": "Manipolazione, social scoring.", "score_weight": 1, "risk_flag": "Critical"},
+    {"id": "q2_37", "section": "2. Inventory Sistemi IA", "question": "2.37: Il sistema è IA generativa? (Art. 52)", "type": "Sì/No", "ref": "AI Act Art. 52", "notes": "Transparency watermarking.", "score_weight": 1, "risk_flag": "Medium"},
+    {"id": "q2_39", "section": "2. Inventory Sistemi IA", "question": "2.39: Bias nei modelli mitigati? (Art. 10)", "type": "Sì/No", "ref": "AI Act Art. 10", "notes": "Fairness testing.", "score_weight": 1, "risk_flag": "Medium", "condition": {"q2_4": "Sviluppatore"}},
+    {"id": "q2_42", "section": "2. Inventory Sistemi IA", "question": "2.42: Impatto su diritti fondamentali (scala 1-5)? (Art. 9)", "type": "Scala 1-5", "ref": "AI Act Art. 9", "notes": "FRIA se ≥3.", "score_weight": 1, "risk_flag": "High"},
+    {"id": "q2_44", "section": "2. Inventory Sistemi IA", "question": "2.44: Policy di ritiro sistemi non conformi? (Art. 21)", "type": "Sì/No", "ref": "AI Act Art. 21", "notes": "Piano ritiro.", "score_weight": 1, "risk_flag": "High", "condition": {"q2_4": "Sviluppatore", "q2_8": "Alto"}},
+    {"id": "q2_46", "section": "2. Inventory Sistemi IA", "question": "2.46: Test di robustezza eseguiti? (Art. 15)", "type": "Sì/No", "ref": "AI Act Art. 15", "notes": "Adversarial testing.", "score_weight": 1, "risk_flag": "High", "condition": {"q2_4": "Sviluppatore", "q2_8": "Alto"}},
+    {"id": "q2_47", "section": "2. Inventory Sistemi IA", "question": "2.47: Meccanismi di explainability implementati? (Art. 13)", "type": "Sì/No", "ref": "AI Act Art. 13", "notes": "XAI high-risk.", "score_weight": 1, "risk_flag": "Medium", "condition": {"q2_4": "Sviluppatore", "q2_8": "Alto"}},
+    {"id": "q2_49", "section": "2. Inventory Sistemi IA", "question": "2.49: Sistema conforme a standard ISO? (Art. 17)", "type": "Sì/No", "ref": "AI Act Art. 17", "notes": "ISO 9001, 27001.", "score_weight": 1, "risk_flag": "Low"},
+    {"id": "q2_50", "section": "2. Inventory Sistemi IA", "question": "2.50: Formazione del personale su AI Act? (Art. 4)", "type": "Sì/No", "ref": "AI Act Art. 4", "notes": "Literacy.", "score_weight": 1, "risk_flag": "Medium"},
+    {"id": "q2_51", "section": "2. Inventory Sistemi IA", "question": "2.51: Registro interno dei sistemi IA? (Art. 11)", "type": "Sì/No", "ref": "AI Act Art. 11", "notes": "Inventory.", "score_weight": 1, "risk_flag": "High"},
+    {"id": "q2_54", "section": "2. Inventory Sistemi IA", "question": "2.54: Backup e disaster recovery? (Art. 15)", "type": "Sì/No", "ref": "AI Act Art. 15", "notes": "Continuità.", "score_weight": 1, "risk_flag": "Medium", "condition": {"q2_4": "Sviluppatore", "q2_8": "Alto"}},
+    {"id": "q2_59", "section": "2. Inventory Sistemi IA", "question": "2.59: Sistema certificato da ente notificato? (Art. 43)", "type": "Sì/No", "ref": "AI Act Art. 43", "notes": "High-risk.", "score_weight": 1, "risk_flag": "Critical", "condition": {"q2_4": "Sviluppatore", "q2_8": "Alto"}},
+    {"id": "q2_60", "section": "2. Inventory Sistemi IA", "question": "2.60: Monitoraggio post-market implementato? (Art. 61)", "type": "Sì/No", "ref": "AI Act Art. 61", "notes": "High-risk.", "score_weight": 1, "risk_flag": "High", "condition": {"q2_4": "Sviluppatore", "q2_8": "Alto"}},
+    {"id": "q2_61", "section": "2. Inventory Sistemi IA", "question": "2.61: Sistema conforme a standard etici UE? (Art. 4)", "type": "Sì/No", "ref": "AI Act Art. 4", "notes": "Valori UE.", "score_weight": 1, "risk_flag": "Medium"},
+    {"id": "q2_62", "section": "2. Inventory Sistemi IA", "question": "2.62: Audit interni periodici? (Art. 17)", "type": "Sì/No", "ref": "AI Act Art. 17", "notes": "Annuale.", "score_weight": 1, "risk_flag": "Medium"},
+    {"id": "q2_68", "section": "2. Inventory Sistemi IA", "question": "2.68: Sistema usa dati sintetici? (Art. 10)", "type": "Sì/No", "ref": "AI Act Art. 10", "notes": "Privacy-preserving.", "score_weight": 1, "risk_flag": "Low"},
+    {"id": "q2_69_dev", "section": "2. Inventory Sistemi IA", "question": "2.69: Il sistema ha fallback umano? (Art. 14)", "type": "Sì/No", "ref": "AI Act Art. 14", "notes": "Override high-risk.", "score_weight": 1, "risk_flag": "High", "condition": {"q2_4": "Sviluppatore", "q2_8": "Alto"}},
+    {"id": "q2_69_user", "section": "2. Inventory Sistemi IA", "question": "2.69: Hai attivato fallback umano? (Art. 29)", "type": "Sì/No", "ref": "AI Act Art. 29", "notes": "Uso override.", "score_weight": 1, "risk_flag": "High", "condition": {"q2_4": "Utilizzatore", "q2_8": "Alto"}},
+    {"id": "q2_71", "section": "2. Inventory Sistemi IA", "question": "2.71: Sistema ha documentazione per utenti? (Art. 13)", "type": "Sì/No", "ref": "AI Act Art. 13", "notes": "Istruzioni deployer.", "score_weight": 1, "risk_flag": "Medium"},
+    {"id": "q2_73", "section": "2. Inventory Sistemi IA", "question": "2.73: Sistema conforme a ePrivacy? (ePrivacy + AI Act)", "type": "Sì/No", "ref": "ePrivacy + AI Act", "notes": "Comunicazioni.", "score_weight": 1, "risk_flag": "Medium"},
+    {"id": "q2_75", "section": "2. Inventory Sistemi IA", "question": "2.75: Sistema conforme a CRA per cybersecurity? (CRA + AI Act Art. 15)", "type": "Sì/No", "ref": "CRA + AI Act Art. 15", "notes": "Cyber Resilience.", "score_weight": 1, "risk_flag": "High"},
+    {"id": "q2_77", "section": "2. Inventory Sistemi IA", "question": "2.77: Sistema conforme a RED per radio equipment? (RED + AI Act)", "type": "Sì/No", "ref": "RED + AI Act", "notes": "Dispositivi AI.", "score_weight": 1, "risk_flag": "Medium"},
+    {"id": "q2_78", "section": "2. Inventory Sistemi IA", "question": "2.78: Sistema ha certificazione di sostenibilità? (Art. 4a)", "type": "Sì/No", "ref": "AI Act Art. 4a", "notes": "Energy efficiency.", "score_weight": 1, "risk_flag": "Low"},
+    {"id": "q2_79", "section": "2. Inventory Sistemi IA", "question": "2.79: Sistema conforme a GPSR per sicurezza prodotti? (GPSR + AI Act)", "type": "Sì/No", "ref": "GPSR + AI Act", "notes": "General Product Safety.", "score_weight": 1, "risk_flag": "Medium"},
+    {"id": "q2_80", "section": "2. Inventory Sistemi IA", "question": "2.80: Sistema ha policy di responsible AI? (Art. 4)", "type": "Sì/No", "ref": "AI Act Art. 4", "notes": "Framework etico.", "score_weight": 1, "risk_flag": "Medium"},
+    {"id": "q2_82", "section": "2. Inventory Sistemi IA", "question": "2.82: Sistema ha version control per modelli? (Art. 11)", "type": "Sì/No", "ref": "AI Act Art. 11", "notes": "Versioning ML.", "score_weight": 1, "risk_flag": "Medium"},
+    {"id": "q2_83", "section": "2. Inventory Sistemi IA", "question": "2.83: Sistema conforme a DSA per piattaforme? (DSA + AI Act)", "type": "Sì/No", "ref": "DSA + AI Act", "notes": "Recommender systems.", "score_weight": 1, "risk_flag": "High"},
+    {"id": "q2_84", "section": "2. Inventory Sistemi IA", "question": "2.84: Sistema ha piano di decommissioning? (Art. 21)", "type": "Sì/No", "ref": "AI Act Art. 21", "notes": "Fine vita sicura.", "score_weight": 1, "risk_flag": "Medium"},
+    {"id": "q2_86", "section": "2. Inventory Sistemi IA", "question": "2.86: Sistema ha audit esterni? (Art. 43)", "type": "Sì/No", "ref": "AI Act Art. 43", "notes": "Ente notificato.", "score_weight": 1, "risk_flag": "Critical", "condition": {"q2_4": "Sviluppatore", "q2_8": "Alto"}},
+    {"id": "q2_87", "section": "2. Inventory Sistemi IA", "question": "2.87: Marcatura CE apposta? (Art. 24)", "type": "Sì/No", "ref": "AI Act Art. 24", "notes": "Visibile su prodotto.", "score_weight": 1, "risk_flag": "High", "condition": {"q2_4": "Sviluppatore", "q2_8": "Alto"}},
+    {"id": "q2_87_imp", "section": "2. Inventory Sistemi IA", "question": "2.87: Hai verificato marcatura CE? (Art. 24)", "type": "Sì/No", "ref": "AI Act Art. 24", "notes": "Verifica importatore.", "score_weight": 1, "risk_flag": "High", "condition": {"q2_4": ["Importatore", "Distributore"], "q2_8": "Alto"}},
+    {"id": "q2_88", "section": "2. Inventory Sistemi IA", "question": "2.88: Sistema conforme a LVD per bassa tensione? (LVD + AI Act)", "type": "Sì/No", "ref": "LVD + AI Act", "notes": "Low Voltage Directive.", "score_weight": 1, "risk_flag": "Medium"},
+    {"id": "q2_91", "section": "2. Inventory Sistemi IA", "question": "2.91: Documentazione conservata per 10 anni? (Art. 11)", "type": "Sì/No", "ref": "AI Act Art. 11", "notes": "High-risk.", "score_weight": 1, "risk_flag": "Medium", "condition": {"q2_4": "Sviluppatore", "q2_8": "Alto"}},
+    {"id": "q2_92", "section": "2. Inventory Sistemi IA", "question": "2.92: Il sistema è per R&D non commerciale (Art. 2 par.6)? (Art. 2(6))", "type": "Sì/No", "ref": "AI Act Art. 2(6)", "notes": "Esclusione ricerca pura.", "score_weight": 1, "risk_flag": "Exclusion"},
+    {"id": "q2_93", "section": "2. Inventory Sistemi IA", "question": "2.93: Il sistema è in ambiente controllato/sandbox (Art. 2 par.8)? (Art. 2(8))", "type": "Sì/No", "ref": "AI Act Art. 2(8)", "notes": "Esclusione test regolati.", "score_weight": 1, "risk_flag": "Exclusion"},
+    {"id": "q2_94", "section": "2. Inventory Sistemi IA", "question": "2.94: Il sistema è per uso privato non professionale (Art. 2 par.9)? (Art. 2(9))", "type": "Sì/No", "ref": "AI Act Art. 2(9)", "notes": "Esclusione uso personale.", "score_weight": 1, "risk_flag": "Exclusion"},
+    {"id": "q2_95", "section": "2. Inventory Sistemi IA", "question": "2.95: Il sistema è open-source non high-risk (Art. 2 par.12)? (Art. 2(12))", "type": "Sì/No", "ref": "AI Act Art. 2(12)", "notes": "Esclusione open-source.", "score_weight": 1, "risk_flag": "Exclusion"}
   ],
   "extra_qs": {
-    "caso_uso": {
-      "Sanità/Biometria": [
-        {
-          "id": "q2_9",
-          "question": "2.9: I dati sono di alta qualità e privi di bias?",
-          "type": "Scala 1-5",
-          "notes": "Cosa significa? Valuta la qualità dei dati usati (1 = Pessima, 5 = Ottima). Esempi: 1 per dati con bias razziali. Scoring: Alto gap se < 3. Penalità: -15% se < 3.",
-          "score_weight": 1,
-          "risk_flag": "Medium",
-          "condition": {"q2_5": "Sanità/Biometria"},
-          "references": [{"source": "AI Act Art. 10", "snippet": "Requisiti per qualità e assenza di bias nei dati."}]
-        },
-        {
-          "id": "q2_10",
-          "question": "2.10: Sono implementate misure di cybersecurity?",
-          "type": "Sì/No",
-          "notes": "Cosa significa? Protezione da attacchi informatici. Esempi: Encryption per dati sensibili. Scoring: Alto gap se no. Penalità: -20%.",
-          "condition": {"q2_5": "Sanità/Biometria"},
-          "references": [{"source": "AI Act Art. 15", "snippet": "Misure di cybersecurity per sistemi IA."}]
-        },
-        {
-          "id": "q2_17",
-          "question": "2.17: Il sistema è un dispositivo medico (SaMD)?",
-          "type": "Sì/No",
-          "ref": "AI Act Art. 6",
-          "notes": "Cosa significa? Verifica se è un dispositivo medico regolato. Esempi: AI per diagnostica. Scoring: Critico se sì senza certificazione. Penalità: -30%.",
-          "score_weight": 3,
-          "risk_flag": "High",
-          "condition": {"q2_5": "Sanità/Biometria"},
-          "references": [{"source": "AI Act Art. 6", "snippet": "Classificazione high-risk per dispositivi medici."}]
-        },
-        {
-          "id": "q2_18",
-          "question": "2.18: Audit GDPR per dati sensibili?",
-          "type": "Sì/No",
-          "ref": "AI Act Art. 10; GDPR Art. 35",
-          "notes": "Cosa significa? Controlla conformità GDPR per dati sanitari. Esempi: DPIA per biometria. Scoring: Alto gap se no. Penalità: -20%.",
-          "score_weight": 2,
-          "risk_flag": "Medium",
-          "condition": {"q2_5": "Sanità/Biometria"},
-          "references": [{"source": "AI Act Art. 10", "snippet": "Requisiti per dati sensibili e GDPR."}]
-        },
-        {
-          "id": "q2_19",
-          "question": "2.19: Hai valutato l’impatto su salute/sicurezza? (1 = Nessun impatto, 5 = Impatto significativo)",
-          "type": "Scala 1-5",
-          "ref": "AI Act Art. 9",
-          "notes": "Cosa significa? Valuta rischi per salute. Esempi: 5 per AI in chirurgia. Scoring: Alto gap se < 3. Penalità: -15% se < 3.",
-          "score_weight": 1,
-          "risk_flag": "Medium",
-          "condition": {"q2_5": "Sanità/Biometria"},
-          "references": [{"source": "AI Act Art. 9", "snippet": "Valutazione rischi per salute e sicurezza."}]
-        }
-      ],
-      "Sicurezza pubblica": [
-        {
-          "id": "q2_11",
-          "question": "2.11: Il sistema è trasparente?",
-          "type": "Sì/No",
-          "notes": "Cosa significa? Informa gli utenti sull’uso dell’AI. Esempi: Disclosure per output generativi. Scoring: Alto gap se no. Penalità: -15%.",
-          "condition": [{"q2_8": "Rischio limitato"}, {"q2_5": ["Recruitment", "Istruzione/Valutazione studenti"]}],
-          "references": [{"source": "AI Act Art. 13", "snippet": "Obblighi di trasparenza per gli utenti."}]
-        },
-        {
-          "id": "q2_20",
-          "question": "2.20: Hai autorizzazioni per uso pubblico?",
-          "type": "Sì/No",
-          "ref": "AI Act Art. 5",
-          "notes": "Cosa significa? Autorizzazione richiesta per sicurezza pubblica. Esempi: Per CCTV AI. Scoring: Critico se no. Penalità: -40%.",
-          "score_weight": 3,
-          "risk_flag": "High",
-          "condition": {"q2_5": "Sicurezza pubblica"},
-          "references": [{"source": "AI Act Art. 5", "snippet": "Proibizioni e autorizzazioni per sicurezza pubblica."}]
-        },
-        {
-          "id": "q2_56",
-          "question": "2.56: Hai ottenuto autorizzazione per uso pubblico?",
-          "type": "Sì/No",
-          "notes": "Cosa significa? Autorizzazione richiesta per sicurezza pubblica. Esempi: Per sorveglianza. Scoring: Critico se no. Penalità: -40%.",
-          "score_weight": 3,
-          "risk_flag": "High",
-          "condition": {"q2_5": "Sicurezza pubblica"},
-          "references": [{"source": "AI Act Art. 5", "snippet": "Autorizzazioni per sicurezza pubblica."}]
-        }
-      ],
-      "Recruitment": [
-        {
-          "id": "q2_12",
-          "question": "2.12: Potrebbe discriminare gruppi vulnerabili?",
-          "type": "Scala 1-5",
-          "notes": "Cosa significa? Valuta rischi di discriminazione (1 = Nessun rischio, 5 = Alto rischio). Esempi: 5 per AI in immigrazione. Scoring: Alto gap se < 3. Penalità: -20% se < 3.",
-          "score_weight": 1,
-          "risk_flag": "High",
-          "condition": {"q2_5": "Recruitment"},
-          "references": [{"source": "AI Act Art. 10", "snippet": "Prevenzione di discriminazioni nei dati."}]
-        },
-        {
-          "id": "q2_21",
-          "question": "2.21: Hai informato candidati sull'uso IA?",
-          "type": "Sì/No",
-          "ref": "AI Act Art. 52",
-          "notes": "Cosa significa? Notifica obbligatoria ai candidati. Esempi: Disclosure in job ads. Scoring: Medio se no. Penalità: -10%.",
-          "score_weight": 1,
-          "risk_flag": "Low",
-          "condition": {"q2_5": "Recruitment"},
-          "references": [{"source": "AI Act Art. 52", "snippet": "Obblighi di trasparenza per recruitment."}]
-        },
-        {
-          "id": "q2_60",
-          "question": "2.60: Il sistema è trasparente per recruitment/istruzione?",
-          "type": "Sì/No",
-          "notes": "Cosa significa? Verifica la trasparenza per utenti in questi settori. Esempi: Disclosure per valutazioni studenti. Scoring: Alto gap se no. Penalità: -15%.",
-          "condition": {"q2_5": "Recruitment"},
-          "references": [{"source": "AI Act Art. 13", "snippet": "Obblighi di trasparenza."}]
-        }
-      ],
-      "Finanza/Scoring creditizio": [
-        {
-          "id": "q2_48",
-          "question": "2.48: Hai mitigato bias nello scoring?",
-          "type": "Sì/No",
-          "ref": "AI Act Art. 10",
-          "notes": "Cosa significa? Riduci pregiudizi nei punteggi finanziari. Esempi: Fairness checks per genere. Scoring: Alto gap se no. Penalità: -20%.",
-          "score_weight": 2,
-          "risk_flag": "Medium",
-          "condition": {"q2_5": "Finanza/Scoring creditizio"},
-          "references": [{"source": "AI Act Art. 10", "snippet": "Mitigazione bias in financial scoring."}]
-        }
-      ],
-      "Istruzione/Valutazione studenti": [
-        {
-          "id": "q2_54",
-          "question": "2.54: Hai informato studenti/genitori sull'uso IA?",
-          "type": "Sì/No",
-          "ref": "AI Act Art. 52",
-          "notes": "Cosa significa? Notifica obbligatoria. Esempi: Disclosure in esami AI. Scoring: Medio se no. Penalità: -10%.",
-          "score_weight": 1,
-          "risk_flag": "Low",
-          "condition": {"q2_5": "Istruzione/Valutazione studenti"},
-          "references": [{"source": "AI Act Art. 52", "snippet": "Obblighi di trasparenza."}]
-        },
-        {
-          "id": "q2_60",
-          "question": "2.60: Il sistema è trasparente per recruitment/istruzione?",
-          "type": "Sì/No",
-          "notes": "Cosa significa? Verifica la trasparenza per utenti in questi settori. Esempi: Disclosure per valutazioni studenti. Scoring: Alto gap se no. Penalità: -15%.",
-          "condition": {"q2_5": "Istruzione/Valutazione studenti"},
-          "references": [{"source": "AI Act Art. 13", "snippet": "Obblighi di trasparenza."}]
-        },
-        {
-          "id": "q2_61",
-          "question": "2.61: Hai ottenuto consenso per dati biometrici/emozioni?",
-          "type": "Sì/No",
-          "notes": "Cosa significa? Richiede consenso per dati sensibili. Esempi: Consenso per emotion recognition. Scoring: Critico se no. Penalità: -30%.",
-          "condition": {"q2_5": "Istruzione/Valutazione studenti"},
-          "references": [{"source": "GDPR Art. 9", "snippet": "Consenso per dati sensibili."}]
-        }
-      ],
-      "Forze dell'ordine/Sorveglianza": [
-        {
-          "id": "q2_88",
-          "question": "2.88: Hai segnalato incidenti AI all’autorità?",
-          "type": "Sì/No",
-          "notes": "Cosa significa? Notifica obbligatoria di incidenti. Esempi: Per utilizzatori post-market. Scoring: Critico se no. Penalità: -25%.",
-          "condition": {"q2_5": "Forze dell'ordine/Sorveglianza"},
-          "references": [{"source": "AI Act Art. 29", "snippet": "Monitoraggio post-market."}]
-        }
-      ],
-      "Immigrazione/Riconoscimento": [
-        {
-          "id": "q2_12",
-          "question": "2.12: Potrebbe discriminare gruppi vulnerabili?",
-          "type": "Scala 1-5",
-          "notes": "Cosa significa? Valuta rischi di discriminazione (1 = Nessun rischio, 5 = Alto rischio). Esempi: 5 per AI in immigrazione. Scoring: Alto gap se < 3. Penalità: -20% se < 3.",
-          "score_weight": 1,
-          "risk_flag": "High",
-          "condition": {"q2_5": "Immigrazione/Riconoscimento"},
-          "references": [{"source": "AI Act Art. 10", "snippet": "Prevenzione di discriminazioni nei dati."}]
-        }
-      ],
-      "Infrastrutture critiche/Monitoraggio": [
-        {
-          "id": "q2_40_infra",
-          "question": "2.40: Sono implementate misure per garantire robustezza contro errori/attacchi? (Art. 15)",
-          "type": "Sì/No",
-          "notes": "Cosa significa? Garanzie contro malfunzionamenti o attacchi. Esempi: Redundancy per errori. Scoring: Alto gap se No. Penalità: -15%.",
-          "score_weight": 2,
-          "risk_flag": "Medium",
-          "condition": {"q2_5": "Infrastrutture critiche/Monitoraggio"},
-          "references": [{"source": "Code_of_Practice Safety page 2", "snippet": "Measures for robustness in GPAI safety."}]
-        }
-      ],
-      "Componenti di sicurezza/Autenticazione": [
-        {
-          "id": "q2_40_comp",
-          "question": "2.40: Sono implementate misure per garantire robustezza contro errori/attacchi? (Art. 15)",
-          "type": "Sì/No",
-          "notes": "Cosa significa? Garanzie contro malfunzionamenti o attacchi. Esempi: Redundancy per errori. Scoring: Alto gap se No. Penalità: -15%.",
-          "score_weight": 2,
-          "risk_flag": "Medium",
-          "condition": {"q2_5": "Componenti di sicurezza/Autenticazione"},
-          "references": [{"source": "Code_of_Practice Safety page 2", "snippet": "Measures for robustness in GPAI safety."}]
-        }
-      ],
-      "Giustizia/Analisi legale": [
-        {
-          "id": "q2_49",
-          "question": "2.49: Rischi sanzioni (fino 4% fatturato) per Giustizia?",
-          "type": "Sì/No",
-          "ref": "AI Act Art. 71",
-          "notes": "Cosa significa? Rischio di multe elevate. Esempi: Per analisi legale biasata. Scoring: Critico se sì. Penalità: -30%.",
-          "score_weight": 3,
-          "risk_flag": "High",
-          "condition": {"q2_5": "Giustizia/Analisi legale"},
-          "references": [{"source": "AI Act Art. 71", "snippet": "Sanzioni per non conformità."}]
-        }
-      ]
-    },
-    "ruolo": {
-      "Sviluppatore": [
-        {
-          "id": "q2_24",
-          "question": "2.24: Hai un sistema di gestione della qualità?",
-          "type": "Sì/No",
-          "ref": "AI Act Art. 17",
-          "notes": "Cosa significa? Sistema per garantire qualità. Esempi: ISO-like per AI. Scoring: Basso se no. Penalità: -10%.",
-          "score_weight": 1,
-          "risk_flag": "Low",
-          "condition": {"q2_4": "Sviluppatore"},
-          "references": [{"source": "AI Act Art. 17", "snippet": "Sistema di gestione qualità per sviluppatori."}]
-        },
-        {
-          "id": "q2_25",
-          "question": "2.25: Documentazione tecnica completa?",
-          "type": "Sì/No",
-          "ref": "AI Act Art. 11",
-          "notes": "Cosa significa? Documenti tecnici richiesti. Esempi: Tech specs per audit. Scoring: Medio. Penalità: -15%.",
-          "score_weight": 1,
-          "risk_flag": "Low",
-          "condition": {"q2_4": "Sviluppatore"},
-          "references": [{"source": "AI Act Art. 11", "snippet": "Documentazione tecnica obbligatoria."}]
-        },
-        {
-          "id": "q2_26",
-          "question": "2.26: Hai condotto assessment rischio (Art. 9)?",
-          "type": "Sì/No",
-          "ref": "AI Act Art. 9",
-          "notes": "Cosa significa? Valutazione dei rischi. Esempi: Per high-risk AI. Scoring: Critico se no. Penalità: -25%.",
-          "score_weight": 3,
-          "risk_flag": "High",
-          "condition": {"q2_4": "Sviluppatore"},
-          "references": [{"source": "AI Act Art. 9", "snippet": "Assessment rischio per sviluppatori."}]
-        },
-        {
-          "id": "q2_90",
-          "question": "2.90: Hai ritirato AI non conforme?",
-          "type": "Sì/No",
-          "notes": "Cosa significa? Ritiro di sistemi non conformi. Esempi: Per sviluppatori/distributori. Scoring: Alto gap se no. Penalità: -20%.",
-          "condition": {"q2_4": "Sviluppatore"},
-          "references": [{"source": "AI Act Art. 24", "snippet": "Ritiro non conformità."}]
-        }
-      ],
-      "Utilizzatore": [
-        {
-          "id": "q2_22",
-          "question": "2.22: Hai policy per monitoraggio post-market?",
-          "type": "Sì/No",
-          "ref": "AI Act Art. 29",
-          "notes": "Cosa significa? Sorveglianza continua post-implementazione. Esempi: Log per incidenti. Scoring: Critico se no. Penalità: -25%.",
-          "score_weight": 2,
-          "risk_flag": "Medium",
-          "condition": {"q2_4": "Utilizzatore"},
-          "references": [{"source": "AI Act Art. 29", "snippet": "Monitoraggio post-market per utilizzatori."}]
-        },
-        {
-          "id": "q2_23",
-          "question": "2.23: Informati lavoratori su uso IA?",
-          "type": "Sì/No",
-          "ref": "AI Act Art. 26; Legge 132/2025",
-          "notes": "Cosa significa? Informa i dipendenti sull’IA. Esempi: Training per lavoratori. Scoring: Alto gap se no. Penalità: -20%.",
-          "score_weight": 2,
-          "risk_flag": "Medium",
-          "condition": {"q2_4": "Utilizzatore"},
-          "references": [{"source": "AI Act Art. 26", "snippet": "Informazione ai lavoratori su IA."}]
-        },
-        {
-          "id": "q2_31",
-          "question": "2.31: Hai condotto una FRIA?",
-          "type": "Sì/No",
-          "ref": "AI Act Art. 29a",
-          "notes": "Cosa significa? Valutazione dei rischi fondamentali. Esempi: FRIA per high-risk in sanità. Scoring: Critico se no. Penalità: -30%.",
-          "score_weight": 3,
-          "risk_flag": "High",
-          "condition": {"q2_4": "Utilizzatore", "q2_8": "Alto rischio"},
-          "references": [{"source": "AI Act Art. 29a", "snippet": "Obbligo FRIA per utilizzatori ad alto rischio."}]
-        },
-        {
-          "id": "q2_88",
-          "question": "2.88: Hai segnalato incidenti AI all’autorità?",
-          "type": "Sì/No",
-          "notes": "Cosa significa? Notifica obbligatoria di incidenti. Esempi: Per utilizzatori post-market. Scoring: Critico se no. Penalità: -25%.",
-          "condition": {"q2_4": "Utilizzatore"},
-          "references": [{"source": "AI Act Art. 29", "snippet": "Monitoraggio post-market."}]
-        },
-        {
-          "id": "q2_89",
-          "question": "2.89: Hai implementato un sistema di gestione della qualità avanzato?",
-          "type": "Sì/No",
-          "notes": "Cosa significa? Sistema di qualità potenziato. Esempi: Per utilizzatori high-risk. Scoring: Alto gap se no. Penalità: -20%.",
-          "condition": {"q2_4": "Utilizzatore"},
-          "references": [{"source": "AI Act Art. 29", "snippet": "Monitoraggio qualità."}]
-        }
-      ],
-      "Importatore": [
-        {
-          "id": "q2_27",
-          "question": "2.27: Verificato conformity da provider?",
-          "type": "Sì/No",
-          "ref": "AI Act Art. 23",
-          "notes": "Cosa significa? Controlla conformità del fornitore. Esempi: Check CE mark. Scoring: Alto gap se no. Penalità: -20%.",
-          "score_weight": 2,
-          "risk_flag": "Medium",
-          "condition": {"q2_4": "Importatore"},
-          "references": [{"source": "AI Act Art. 23", "snippet": "Verifica conformità per importatori."}]
-        },
-        {
-          "id": "q2_28",
-          "question": "2.28: Hai segnalato mancanza di conformità normativa a autorità?",
-          "type": "Sì/No",
-          "ref": "AI Act Art. 23",
-          "notes": "Cosa significa? Notifica obbligatoria per non-conformità. Esempi: Report to AI Office. Scoring: Medio se no. Penalità: -10%.",
-          "score_weight": 1,
-          "risk_flag": "Low",
-          "condition": {"q2_4": "Importatore"},
-          "references": [{"source": "AI Act Art. 23", "snippet": "Segnalazione non-conformità."}]
-        },
-        {
-          "id": "q2_87",
-          "question": "2.87: Verificata marcatura CE?",
-          "type": "Sì/No",
-          "notes": "Cosa significa? Controlla la conformità UE. Esempi: Per importatori di high-risk AI. Scoring: Alto gap se no. Penalità: -20%.",
-          "condition": {"q2_4": "Importatore"},
-          "references": [{"source": "AI Act Art. 23", "snippet": "Verifica conformità per importatori."}]
-        }
-      ],
-      "Distributore": [
-        {
-          "id": "q2_29",
-          "question": "2.29: Mantenuti records per traceability?",
-          "type": "Sì/No",
-          "ref": "AI Act Art. 24",
-          "notes": "Cosa significa? Registri per tracciare l’AI. Esempi: Supply chain logs. Scoring: Medio. Penalità: -15%.",
-          "score_weight": 1,
-          "risk_flag": "Low",
-          "condition": {"q2_4": "Distributore"},
-          "references": [{"source": "AI Act Art. 24", "snippet": "Tracciabilità per distributori."}]
-        },
-        {
-          "id": "q2_30",
-          "question": "2.30: Hai informato su non-conformità?",
-          "type": "Sì/No",
-          "ref": "AI Act Art. 24",
-          "notes": "Cosa significa? Notifica su non-conformità. Esempi: Alert to users. Scoring: Medio se no. Penalità: -10%.",
-          "score_weight": 1,
-          "risk_flag": "Low",
-          "condition": {"q2_4": "Distributore"},
-          "references": [{"source": "AI Act Art. 24", "snippet": "Notifica non-conformità."}]
-        }
-      ],
-      "Rappresentante": [
-        {
-          "id": "q2_31",
-          "question": "2.31: Conservi documentazione per 10 anni?",
-          "type": "Sì/No",
-          "ref": "AI Act Art. 25",
-          "notes": "Cosa significa? Archiviazione obbligatoria. Esempi: Docs for audits. Scoring: Medio se no. Penalità: -15%.",
-          "score_weight": 1,
-          "risk_flag": "Low",
-          "condition": {"q2_4": "Rappresentante"},
-          "references": [{"source": "AI Act Art. 25", "snippet": "Conservazione documentazione per 10 anni."}]
-        },
-        {
-          "id": "q2_32",
-          "question": "2.32: Hai designato un referente UE?",
-          "type": "Sì/No",
-          "ref": "AI Act Art. 25",
-          "notes": "Cosa significa? Nomina di un referente nell’UE. Esempi: EU rep for non-EU providers. Scoring: Medio se no. Penalità: -10%.",
-          "score_weight": 1,
-          "risk_flag": "Low",
-          "condition": {"q2_4": "Rappresentante"},
-          "references": [{"source": "AI Act Art. 25", "snippet": "Designazione referente UE."}]
-        },
-        {
-          "id": "q2_91",
-          "question": "2.91: Hai aggiornato la documentazione in 10 anni?",
-          "type": "Sì/No",
-          "notes": "Cosa significa? Aggiornamento periodico richiesto. Esempi: Per rappresentanti UE. Scoring: Medio gap se no. Penalità: -15%.",
-          "condition": {"q2_4": "Rappresentante"},
-          "references": [{"source": "AI Act Art. 25", "snippet": "Conservazione documentazione."}]
-        }
-      ]
-    },
-    "settore": {
-      "Finanza": [
-        {
-          "id": "q2_55",
-          "question": "2.55: Hai implementato controlli anti-riciclaggio?",
-          "type": "Sì/No",
-          "ref": "AI Act Art. 10",
-          "notes": "Cosa significa? Conformità a normative finanziarie. Esempi: AML checks in AI. Scoring: Alto gap se no. Penalità: -20%.",
-          "score_weight": 2,
-          "risk_flag": "Medium",
-          "condition": {"q1_1": "Finanza"},
-          "references": [{"source": "AI Act Art. 10", "snippet": "Controlli per dati sensibili."}]
-        }
-      ],
-      "Sanità": [
-        {
-          "id": "q2_39",
-          "question": "2.39: Rischi sanzioni (fino 4% fatturato) per Sanità?",
-          "type": "Sì/No",
-          "ref": "AI Act Art. 71",
-          "notes": "Cosa significa? Rischio di multe elevate. Esempi: Per non-conformità in biometria. Scoring: Critico se sì. Penalità: -30%.",
-          "score_weight": 3,
-          "risk_flag": "High",
-          "condition": {"q1_1": "Sanità"},
-          "references": [{"source": "AI Act Art. 71", "snippet": "Sanzioni per non conformità."}]
-        }
-      ],
-      "Forze dell'ordine": [
-        {
-          "id": "q2_41",
-          "question": "2.41: Rischi sanzioni (fino 4% fatturato) per Forze dell'ordine?",
-          "type": "Sì/No",
-          "ref": "AI Act Art. 71",
-          "notes": "Cosa significa? Rischio di multe elevate. Esempi: Per sorveglianza non autorizzata. Scoring: Critico se sì. Penalità: -30%.",
-          "score_weight": 3,
-          "risk_flag": "High",
-          "condition": {"q1_1": "Forze dell'ordine"},
-          "references": [{"source": "AI Act Art. 71", "snippet": "Sanzioni per non conformità."}]
-        }
-      ],
-      "Immigrazione": [
-        {
-          "id": "q2_43",
-          "question": "2.43: Rischi sanzioni (fino 4% fatturato) per Immigrazione?",
-          "type": "Sì/No",
-          "ref": "AI Act Art. 71",
-          "notes": "Cosa significa? Rischio di multe elevate. Esempi: Per riconoscimento non conforme. Scoring: Critico se sì. Penalità: -30%.",
-          "score_weight": 3,
-          "risk_flag": "High",
-          "condition": {"q1_1": "Immigrazione"},
-          "references": [{"source": "AI Act Art. 71", "snippet": "Sanzioni per non conformità."}]
-        }
-      ],
-      "Infrastrutture critiche": [
-        {
-          "id": "q2_45",
-          "question": "2.45: Rischi sanzioni (fino 4% fatturato) per Infrastrutture critiche?",
-          "type": "Sì/No",
-          "ref": "AI Act Art. 71",
-          "notes": "Cosa significa? Rischio di multe elevate. Esempi: Per monitoraggio non sicuro. Scoring: Critico se sì. Penalità: -30%.",
-          "score_weight": 3,
-          "risk_flag": "High",
-          "condition": {"q1_1": "Infrastrutture critiche"},
-          "references": [{"source": "AI Act Art. 71", "snippet": "Sanzioni per non conformità."}]
-        }
-      ],
-      "Componenti di sicurezza": [
-        {
-          "id": "q2_47",
-          "question": "2.47: Rischi sanzioni (fino 4% fatturato) per Componenti di sicurezza?",
-          "type": "Sì/No",
-          "ref": "AI Act Art. 71",
-          "notes": "Cosa significa? Rischio di multe elevate. Esempi: Per autenticazione fallace. Scoring: Critico se sì. Penalità: -30%.",
-          "score_weight": 3,
-          "risk_flag": "High",
-          "condition": {"q1_1": "Componenti di sicurezza"},
-          "references": [{"source": "AI Act Art. 71", "snippet": "Sanzioni per non conformità."}]
-        }
-      ],
-      "Giustizia": [
-        {
-          "id": "q2_96",
-          "question": "2.96: Hai autorizzazioni per sistemi critici per Giustizia?",
-          "type": "Sì/No",
-          "ref": "AI Act Art. 6",
-          "notes": "Cosa significa? Autorizzazioni per settori critici. Esempi: Per analisi legale. Scoring: Alto gap se no. Penalità: -20%.",
-          "score_weight": 2,
-          "risk_flag": "Medium",
-          "condition": {"q1_1": "Giustizia"},
-          "references": [{"source": "AI Act Art. 6", "snippet": "Certificazioni per settori critici."}]
-        }
-      ],
-      "Difesa/Militare": [
-        {
-          "id": "q2_50",
-          "question": "2.50: Il sistema è escluso dall'AI Act per uso militare (Art. 2)?",
-          "type": "Sì/No",
-          "ref": "AI Act Art. 2",
-          "notes": "Cosa significa? Esclusione per usi militari. Esempi: AI in armi. Scoring: Bonus se Sì (+10%).",
-          "score_weight": 1,
-          "risk_flag": "Low",
-          "condition": {"q1_1": "Difesa/Militare"},
-          "references": [{"source": "AI Act Art. 2", "snippet": "Esclusione per usi militari e difesa."}]
-        },
-        {
-          "id": "q2_51",
-          "question": "2.51: Hai valutato rischi etici nonostante esclusione?",
-          "type": "Sì/No",
-          "ref": "AI Act Art. 2",
-          "notes": "Cosa significa? Valutazione etica opzionale. Esempi: Etica per AI in difesa. Scoring: Medio gap se No. Penalità: -10%.",
-          "score_weight": 1,
-          "risk_flag": "Medium",
-          "condition": {"q1_1": "Difesa/Militare"},
-          "references": [{"source": "AI Act Art. 2", "snippet": "Valutazione etica per esclusi."}]
-        }
-      ],
-      "Sicurezza Nazionale": [
-        {
-          "id": "q2_52",
-          "question": "2.52: Il sistema è escluso per sicurezza nazionale (Art. 2)?",
-          "type": "Sì/No",
-          "ref": "AI Act Art. 2",
-          "notes": "Cosa significa? Esclusione per sicurezza nazionale. Esempi: AI per intelligence. Scoring: Bonus se Sì (+10%).",
-          "score_weight": 1,
-          "risk_flag": "Low",
-          "condition": {"q1_1": "Sicurezza Nazionale"},
-          "references": [{"source": "AI Act Art. 2", "snippet": "Esclusione per sicurezza nazionale."}]
-        },
-        {
-          "id": "q2_53",
-          "question": "2.53: Hai valutato rischi etici nonostante esclusione?",
-          "type": "Sì/No",
-          "ref": "AI Act Art. 2",
-          "notes": "Cosa significa? Valutazione etica opzionale. Esempi: Etica per AI in sicurezza. Scoring: Medio gap se No. Penalità: -10%.",
-          "score_weight": 1,
-          "risk_flag": "Medium",
-          "condition": {"q1_1": "Sicurezza Nazionale"},
-          "references": [{"source": "AI Act Art. 2", "snippet": "Valutazione etica per esclusi."}]
-        }
-      ]
-    },
-    "settore_critico": {
-      "Sanità": [
-        {
-          "id": "q2_38_sanita",
-          "question": "2.38: Hai autorizzazioni per sistemi critici per Sanità?",
-          "type": "Sì/No",
-          "ref": "AI Act Art. 6",
-          "notes": "Cosa significa? Autorizzazioni per settori critici. Esempi: Cert per medical AI. Scoring: Alto gap se no. Penalità: -20%.",
-          "score_weight": 2,
-          "risk_flag": "Medium",
-          "condition": {"q1_1": "Sanità"},
-          "references": [{"source": "AI Act Art. 6", "snippet": "Certificazioni per settori critici."}]
-        }
-      ],
-      "Forze dell'ordine": [
-        {
-          "id": "q2_40_forze",
-          "question": "2.40: Hai autorizzazioni per sistemi critici per Forze dell'ordine?",
-          "type": "Sì/No",
-          "ref": "AI Act Art. 6",
-          "notes": "Cosa significa? Autorizzazioni per settori critici. Esempi: Per sorveglianza. Scoring: Alto gap se no. Penalità: -20%.",
-          "score_weight": 2,
-          "risk_flag": "Medium",
-          "condition": {"q1_1": "Forze dell'ordine"},
-          "references": [{"source": "AI Act Art. 6", "snippet": "Certificazioni per settori critici."}]
-        }
-      ],
-      "Immigrazione": [
-        {
-          "id": "q2_42_immig",
-          "question": "2.42: Hai autorizzazioni per sistemi critici per Immigrazione?",
-          "type": "Sì/No",
-          "ref": "AI Act Art. 6",
-          "notes": "Cosa significa? Autorizzazioni per settori critici. Esempi: Per riconoscimento. Scoring: Alto gap se no. Penalità: -20%.",
-          "score_weight": 2,
-          "risk_flag": "Medium",
-          "condition": {"q1_1": "Immigrazione"},
-          "references": [{"source": "AI Act Art. 6", "snippet": "Certificazioni per settori critici."}]
-        }
-      ],
-      "Infrastrutture critiche": [
-        {
-          "id": "q2_44_infra",
-          "question": "2.44: Hai autorizzazioni per sistemi critici per Infrastrutture critiche?",
-          "type": "Sì/No",
-          "ref": "AI Act Art. 6",
-          "notes": "Cosa significa? Autorizzazioni per settori critici. Esempi: Per monitoraggio power grid. Scoring: Alto gap se no. Penalità: -20%.",
-          "score_weight": 2,
-          "risk_flag": "Medium",
-          "condition": {"q1_1": "Infrastrutture critiche"},
-          "references": [{"source": "AI Act Art. 6", "snippet": "Certificazioni per settori critici."}]
-        }
-      ],
-      "Componenti di sicurezza": [
-        {
-          "id": "q2_46_comp",
-          "question": "2.46: Hai autorizzazioni per sistemi critici per Componenti di sicurezza?",
-          "type": "Sì/No",
-          "ref": "AI Act Art. 6",
-          "notes": "Cosa significa? Autorizzazioni per settori critici. Esempi: Per autenticazione. Scoring: Alto gap se no. Penalità: -20%.",
-          "score_weight": 2,
-          "risk_flag": "Medium",
-          "condition": {"q1_1": "Componenti di sicurezza"},
-          "references": [{"source": "AI Act Art. 6", "snippet": "Certificazioni per settori critici."}]
-        }
-      ]
-    },
-    "rischio": {
-      "Proibito": [
-        {
-          "id": "q2_16",
-          "question": "2.16: Usa subliminal/manipulative techniques o sfrutta vulnerabilità?",
-          "type": "Multipla",
-          "notes": "Cosa significa? Tecniche che influenzano inconsapevolmente. Esempi: Sì per social scoring. Scoring: Critico se 'Sì a subliminal' o simili. Penalità: -30%.",
-          "options": ["No", "Sì a subliminal (Art. 5(1)(a))", "Sì a exploitation vulnerabilità (Art. 5(1)(b))", "Sì a social scoring (Art. 5(1)(c))", "Sì, ma mitigato"],
-          "score_weight": 3,
-          "risk_flag": "High",
-          "condition": {"q2_8": "Proibito"},
-          "references": [{"source": "Guidelines Prohibited page 2", "snippet": "Art. 5(1)(a): Prohibits manipulative techniques causing harm."}]
-        },
-        {
-          "id": "q2_34",
-          "question": "2.34: Hai ottenuto autorizzazione specifica?",
-          "type": "Sì/No",
-          "ref": "AI Act Art. 5",
-          "notes": "Cosa significa? Autorizzazione per pratiche proibite. Esempi: Per exceptional use. Scoring: Critico se no. Penalità: -40%.",
-          "score_weight": 3,
-          "risk_flag": "High",
-          "condition": {"q2_8": "Proibito"},
-          "references": [{"source": "AI Act Art. 5", "snippet": "Proibizioni e autorizzazioni."}]
-        }
-      ],
-      "Alto rischio": [
-        {
-          "id": "q2_13",
-          "question": "2.13: Il sistema AI secondo Art. 3(1) incide autonomamente sulla realtà con decisioni autonome (machine-based che inferisce outputs)?",
-          "type": "Sì/No",
-          "notes": "Cosa significa? Verifica se l’AI prende decisioni senza supervisione umana. Esempi: Sì per autonomous driving. Scoring: Basso se no.",
-          "score_weight": 1,
-          "risk_flag": "Low",
-          "condition": {"q2_8": "Alto rischio"},
-          "references": [{"source": "COMMUN~2.PDF", "snippet": "AI system: machine-based che infers outputs da inputs per influenzare ambiente fisico/reale."}]
-        },
-        {
-          "id": "q2_14",
-          "question": "2.14: È un general-purpose AI model (multi-task, adaptable)?",
-          "type": "Sì/No",
-          "notes": "Cosa significa? AI versatile per più compiti. Esempi: Sì per GPT-like models. Scoring: Medio se no.",
-          "score_weight": 2,
-          "risk_flag": "Medium",
-          "condition": {"q2_8": "Alto rischio", "q2_13": "Sì"},
-          "references": [{"source": "Guidelines Scope page 2", "snippet": "General-purpose AI model: AI che performs general tasks, adaptable."}]
-        },
-        {
-          "id": "q2_15",
-          "question": "2.15: Ha systemic risk (>10^25 FLOPs o designato)?",
-          "type": "Sì/No",
-          "notes": "Cosa significa? Rischio sistemico che richiede notifica. Esempi: Sì per large-scale models come GPT-4. Scoring: Alto se sì senza mitigazione.",
-          "score_weight": 3,
-          "risk_flag": "High",
-          "condition": {"q2_8": "Alto rischio", "q2_14": "Sì"},
-          "references": [{"source": "COMMUN~1.PDF page 2", "snippet": "Systemic risk if >10^25 FLOPs; notification required."}]
-        },
-        {
-          "id": "q2_35",
-          "question": "2.35: Hai condotto assessment rischio (Art. 9)?",
-          "type": "Sì/No",
-          "ref": "AI Act Art. 9",
-          "notes": "Cosa significa? Valutazione rischi per alto rischio. Esempi: Per sanità. Scoring: Critico se no. Penalità: -25%.",
-          "score_weight": 3,
-          "risk_flag": "High",
-          "condition": {"q2_8": "Alto rischio", "q2_4": "Sviluppatore"},
-          "references": [{"source": "AI Act Art. 9", "snippet": "Assessment rischio per sviluppatori."}]
-        },
-        {
-          "id": "q2_42",
-          "question": "2.42: Hai valutato impatto su diritti fondamentali? (1 = Nessuno, 5 = Alto)",
-          "type": "Scala 1-5",
-          "notes": "Cosa significa? Valuta l’impatto su diritti (1 = Nessuno, 5 = Alto). Esempi: 5 per prohibited practices. Scoring: Alto gap se <3. Penalità: -20% se <3.",
-          "score_weight": 2,
-          "risk_flag": "High",
-          "condition": {"q2_8": "Alto rischio"},
-          "references": [{"source": "AI Act Art. 9", "snippet": "Valutazione impatto su diritti fondamentali."}]
-        },
-        {
-          "id": "q2_44",
-          "question": "2.44: Lifecycle del model documentato?",
-          "type": "Sì/No",
-          "notes": "Cosa significa? Documentazione del ciclo di vita. Esempi: Da training a deployment. Scoring: Medio gap se No. Penalità: -10%.",
-          "score_weight": 1,
-          "risk_flag": "Medium",
-          "condition": {"q2_8": "Alto rischio", "q2_14": "Sì"},
-          "references": [{"source": "Guidelines Scope page 8", "snippet": "Lifecycle of general-purpose AI model."}]
-        },
-        {
-          "id": "q2_45",
-          "question": "2.45: Model Documentation Form compilato?",
-          "type": "Sì/No",
-          "notes": "Cosa significa? Formulario di trasparenza. Esempi: Per downstream providers. Scoring: Alto gap se No. Penalità: -15%.",
-          "score_weight": 2,
-          "risk_flag": "Medium",
-          "condition": {"q2_8": "Alto rischio", "q2_14": "Sì"},
-          "references": [{"source": "Code_of_Practice Transparency page 2", "snippet": "Model Documentation Form for transparency."}]
-        },
-        {
-          "id": "q2_46",
-          "question": "2.46: Hai aderito a Code of Practice adeguato?",
-          "type": "Sì/No",
-          "notes": "Cosa significa? Adesione a codici di pratica. Esempi: Per GPAI systemic. Scoring: Medio gap se No. Penalità: -10%.",
-          "score_weight": 1,
-          "risk_flag": "Medium",
-          "condition": {"q2_8": "Alto rischio", "q2_14": "Sì"},
-          "references": [{"source": "AI Act Art. 56", "snippet": "Adherence to codes for systemic GPAI."}]
-        },
-        {
-          "id": "q2_47",
-          "question": "2.47: Hai notificato systemic risk all'AI Office?",
-          "type": "Sì/No",
-          "notes": "Cosa significa? Notifica obbligatoria per rischi sistemici. Esempi: Per >10^25 FLOPs. Scoring: Critico se No. Penalità: -25%.",
-          "score_weight": 3,
-          "risk_flag": "High",
-          "condition": {"q2_8": "Alto rischio", "q2_15": "Sì"},
-          "references": [{"source": "Guidelines Scope page 11", "snippet": "Notification procedure for systemic risk."}]
-        }
-      ],
-      "Rischio limitato": [
-        {
-          "id": "q2_36",
-          "question": "2.36: Usa deepfake o emotion recognition?",
-          "type": "Sì/No",
-          "ref": "AI Act Art. 52",
-          "notes": "Cosa significa? Tecnologie con obblighi di disclosure. Esempi: Deepfake in media. Scoring: Medio se sì. Penalità: -10%.",
-          "score_weight": 1,
-          "risk_flag": "Low",
-          "condition": {"q2_8": "Rischio limitato"},
-          "references": [{"source": "AI Act Art. 52", "snippet": "Obblighi di disclosure."}]
-        },
-        {
-          "id": "q2_37",
-          "question": "2.37: Hai implementato disclosure su IA generativa?",
-          "type": "Sì/No",
-          "ref": "AI Act Art. 52",
-          "notes": "Cosa significa? Informa sugli output generativi. Esempi: Label 'AI-generated'. Scoring: Medio se no. Penalità: -10%.",
-          "score_weight": 1,
-          "risk_flag": "Low",
-          "condition": {"q2_8": "Rischio limitato"},
-          "references": [{"source": "AI Act Art. 52", "snippet": "Obblighi di disclosure."}]
-        }
-      ],
-      "Minimo": [
-        {
-          "id": "q2_36a",
-          "question": "2.36a: Usa deepfake o emotion recognition?",
-          "type": "Sì/No",
-          "ref": "AI Act Art. 52",
-          "notes": "Cosa significa? Tecnologie con obblighi di disclosure. Esempi: Emotion in chatbots. Scoring: Medio se sì. Penalità: -10%.",
-          "score_weight": 1,
-          "risk_flag": "Low",
-          "condition": {"q2_8": "Minimo"},
-          "references": [{"source": "AI Act Art. 52", "snippet": "Obblighi di disclosure."}]
-        },
-        {
-          "id": "q2_37a",
-          "question": "2.37a: Hai implementato disclosure su IA generativa?",
-          "type": "Sì/No",
-          "ref": "AI Act Art. 52",
-          "notes": "Cosa significa? Informa sugli output generativi. Esempi: Watermark per text. Scoring: Medio se no. Penalità: -10%.",
-          "score_weight": 1,
-          "risk_flag": "Low",
-          "condition": {"q2_8": "Minimo"},
-          "references": [{"source": "AI Act Art. 52", "snippet": "Obblighi di disclosure."}]
-        }
-      ]
-    },
-    "esclusioni": [
-      {
-        "id": "q2_97",
-        "question": "2.97: Il sistema beneficia di esclusioni (es. R&D non commerciale, Art. 2)?",
-        "type": "Sì/No",
-        "notes": "Cosa significa? Esenzioni da obblighi AI Act. Esempi: Sì per R&D puro. Scoring: Bonus se Sì (+10%).",
-        "score_weight": 1,
-        "risk_flag": "Low",
-        "condition": true,
-        "references": [{"source": "AI Act Art. 2 page 7-11", "snippet": "Exclusions for R&D, defence, open-source."}]
-      },
-      {
-        "id": "q2_92",
-        "question": "2.92: Il sistema è per R&D non commerciale (Art. 2 par.6)?",
-        "type": "Sì/No",
-        "ref": "AI Act Art. 2(6)",
-        "notes": "Cosa significa? Esclusione per ricerca pura. Esempi: AI in lab accademico. Scoring: Bonus se Sì (+10%).",
-        "score_weight": 1,
-        "risk_flag": "Low",
-        "condition": true,
-        "references": [{"source": "AI Act Art. 2", "snippet": "Esclusione R&D non commerciale."}]
-      },
-      {
-        "id": "q2_93",
-        "question": "2.93: Il sistema è in ambiente controllato/sandbox (Art. 2 par.8)?",
-        "type": "Sì/No",
-        "ref": "AI Act Art. 2(8)",
-        "notes": "Cosa significa? Esclusione per test regolati. Esempi: Regulatory sandbox UE. Scoring: Bonus se Sì (+10%).",
-        "score_weight": 1,
-        "risk_flag": "Low",
-        "condition": true,
-        "references": [{"source": "AI Act Art. 2", "snippet": "Esclusione ambienti controllati."}]
-      },
-      {
-        "id": "q2_94",
-        "question": "2.94: Il sistema è per uso privato non professionale (Art. 2 par.9)?",
-        "type": "Sì/No",
-        "ref": "AI Act Art. 2(9)",
-        "notes": "Cosa significa? Esclusione per uso personale. Esempi: AI app per hobby. Scoring: Bonus se Sì (+10%).",
-        "score_weight": 1,
-        "risk_flag": "Low",
-        "condition": true,
-        "references": [{"source": "AI Act Art. 2", "snippet": "Esclusione uso privato."}]
-      },
-      {
-        "id": "q2_95",
-        "question": "2.95: Il sistema è open-source non high-risk (Art. 2 par.12)?",
-        "type": "Sì/No",
-        "ref": "AI Act Art. 2(12)",
-        "notes": "Cosa significa? Esclusione per open-source senza rischio sistemico. Esempi: GPL model non GPAI systemic. Scoring: Bonus se Sì (+10%).",
-        "score_weight": 1,
-        "risk_flag": "Low",
-        "condition": {"q2_8": ["Rischio limitato", "Minimo"]},
-        "references": [{"source": "AI Act Art. 2", "snippet": "Esclusione open-source non high-risk."}]
-      }
+    "q2_38_sanita": [
+      {"id": "q2_38_1", "question": "Extra sanità: Usa AI in dispositivi medici? (Annex III)", "type": "Sì/No", "ref": "AI Act Annex III", "notes": "High-risk se Sì.", "score_weight": 1, "risk_flag": "High", "condition": {"q2_5": "Sanità/Biometria"}},
+      {"id": "q2_38_2", "question": "Extra sanità: Bias in diagnostica mitigato? (Art. 10)", "type": "Sì/No", "ref": "AI Act Art. 10", "notes": "Fairness diagnostica.", "score_weight": 1, "risk_flag": "Medium", "condition": {"q2_5": "Sanità/Biometria"}},
+      {"id": "q2_38_3", "question": "Extra sanità: Impatto salute (scala 1-5)? (Art. 9)", "type": "Scala 1-5", "ref": "AI Act Art. 9", "notes": "Risk in sanità.", "score_weight": 1, "risk_flag": "High", "condition": {"q2_5": "Sanità/Biometria"}},
+      {"id": "q2_38_4", "question": "Extra sanità: Conformità MDR? (Art. 6)", "type": "Sì/No", "ref": "AI Act Art. 6", "notes": "Medical Device Regulation.", "score_weight": 1, "risk_flag": "High", "condition": {"q2_5": "Sanità/Biometria"}},
+      {"id": "q2_38_5", "question": "Extra sanità: Notifica autorità sanitaria? (Art. 22)", "type": "Sì/No", "ref": "AI Act Art. 22", "notes": "Obbligatoria high-risk sanità.", "score_weight": 1, "risk_flag": "High", "condition": {"q2_5": "Sanità/Biometria"}}
+    ],
+    "q2_40_forze": [
+      {"id": "q2_40_1", "question": "Extra forze: Usa AI in sorveglianza? (Art. 5)", "type": "Sì/No", "ref": "AI Act Art. 5", "notes": "Proibito mass surveillance.", "score_weight": 1, "risk_flag": "Critical", "condition": {"q2_5": "Forze Ordine"}},
+      {"id": "q2_40_2", "question": "Extra forze: Oversight umano in decisioni? (Art. 14)", "type": "Sì/No", "ref": "AI Act Art. 14", "notes": "Obbligatorio law enforcement.", "score_weight": 1, "risk_flag": "High", "condition": {"q2_5": "Forze Ordine"}},
+      {"id": "q2_40_3", "question": "Extra forze: Logging decisioni AI? (Art. 12)", "type": "Sì/No", "ref": "AI Act Art. 12", "notes": "Tracciabilità.", "score_weight": 1, "risk_flag": "High", "condition": {"q2_5": "Forze Ordine"}},
+      {"id": "q2_40_4", "question": "Extra forze: Valutazione impatto diritti? (Art. 9)", "type": "Sì/No", "ref": "AI Act Art. 9", "notes": "FRIA.", "score_weight": 1, "risk_flag": "High", "condition": {"q2_5": "Forze Ordine"}},
+      {"id": "q2_40_5", "question": "Extra forze: Sistema conforme a LED? (Art. 5)", "type": "Sì/No", "ref": "AI Act Art. 5", "notes": "Law Enforcement Directive.", "score_weight": 1, "risk_flag": "High", "condition": {"q2_5": "Forze Ordine"}}
+    ],
+    "q2_42_immig": [
+      {"id": "q2_42_1", "question": "Extra immig: Usa biometria in borders? (Art. 5)", "type": "Sì/No", "ref": "AI Act Art. 5", "notes": "Proibito discriminatory.", "score_weight": 1, "risk_flag": "Critical", "condition": {"q2_5": "Immigrazione"}},
+      {"id": "q2_42_2", "question": "Extra immig: Bias in scoring migratorio? (Art. 10)", "type": "Sì/No", "ref": "AI Act Art. 10", "notes": "Fairness migration.", "score_weight": 1, "risk_flag": "High", "condition": {"q2_5": "Immigrazione"}},
+      {"id": "q2_42_3", "question": "Extra immig: Oversight umano in decisioni? (Art. 14)", "type": "Sì/No", "ref": "AI Act Art. 14", "notes": "Obbligatorio migration.", "score_weight": 1, "risk_flag": "High", "condition": {"q2_5": "Immigrazione"}},
+      {"id": "q2_42_4", "question": "Extra immig: Notifica a interessati? (Art. 13)", "type": "Sì/No", "ref": "AI Act Art. 13", "notes": "Transparency migration.", "score_weight": 1, "risk_flag": "Medium", "condition": {"q2_5": "Immigrazione"}},
+      {"id": "q2_42_5", "question": "Extra immig: Sistema conforme a Return Directive? (Art. 6)", "type": "Sì/No", "ref": "AI Act Art. 6", "notes": "Sistemi immigrazione.", "score_weight": 1, "risk_flag": "High", "condition": {"q2_5": "Immigrazione"}}
+    ],
+    "q2_45_infra": [
+      {"id": "q2_45_1", "question": "Extra infra: Impatto su critical infra (scala 1-5)? (Art. 9)", "type": "Scala 1-5", "ref": "AI Act Art. 9", "notes": "Risk critical sectors.", "score_weight": 1, "risk_flag": "High", "condition": {"q2_5": "Infrastrutture critiche"}},
+      {"id": "q2_45_2", "question": "Extra infra: Redundancy sistemi? (Art. 15)", "type": "Sì/No", "ref": "AI Act Art. 15", "notes": "Fail-safe.", "score_weight": 1, "risk_flag": "High", "condition": {"q2_5": "Infrastrutture critiche"}},
+      {"id": "q2_45_3", "question": "Extra infra: Monitoraggio real-time? (Art. 12)", "type": "Sì/No", "ref": "AI Act Art. 12", "notes": "Logging.", "score_weight": 1, "risk_flag": "High", "condition": {"q2_5": "Infrastrutture critiche"}},
+      {"id": "q2_45_4", "question": "Extra infra: Conformità NIS2? (Art. 15)", "type": "Sì/No", "ref": "AI Act Art. 15", "notes": "Cybersecurity infra.", "score_weight": 1, "risk_flag": "High", "condition": {"q2_5": "Infrastrutture critiche"}},
+      {"id": "q2_45_5", "question": "Extra infra: Piano di continuità operativa? (Art. 15)", "type": "Sì/No", "ref": "AI Act Art. 15", "notes": "Business continuity.", "score_weight": 1, "risk_flag": "High", "condition": {"q2_5": "Infrastrutture critiche"}}
+    ],
+    "q2_48_finance": [
+      {"id": "q2_48_1", "question": "Extra finance: Bias in scoring creditizio mitigato? (Art. 10)", "type": "Sì/No", "ref": "AI Act Art. 10", "notes": "Fairness finance.", "score_weight": 1, "risk_flag": "Medium", "condition": {"q2_5": "Finanza/Scoring"}},
+      {"id": "q2_48_2", "question": "Extra finance: Explainability in decisioni? (Art. 13)", "type": "Sì/No", "ref": "AI Act Art. 13", "notes": "XAI scoring.", "score_weight": 1, "risk_flag": "Medium", "condition": {"q2_5": "Finanza/Scoring"}},
+      {"id": "q2_48_3", "question": "Extra finance: Conformità PSD2? (Art. 6)", "type": "Sì/No", "ref": "AI Act Art. 6", "notes": "Payment Services.", "score_weight": 1, "risk_flag": "High", "condition": {"q2_5": "Finanza/Scoring"}},
+      {"id": "q2_48_4", "question": "Extra finance: Stress testing modelli? (Art. 15)", "type": "Sì/No", "ref": "AI Act Art. 15", "notes": "Robustezza finanziaria.", "score_weight": 1, "risk_flag": "High", "condition": {"q2_5": "Finanza/Scoring"}},
+      {"id": "q2_48_5", "question": "Extra finance: Audit trail transazioni? (Art. 12)", "type": "Sì/No", "ref": "AI Act Art. 12", "notes": "Tracciabilità finance.", "score_weight": 1, "risk_flag": "High", "condition": {"q2_5": "Finanza/Scoring"}}
+    ],
+    "q2_50_education": [
+      {"id": "q2_50_1", "question": "Extra education: AI in assessment studenti? (Annex III)", "type": "Sì/No", "ref": "AI Act Annex III", "notes": "High-risk education.", "score_weight": 1, "risk_flag": "High", "condition": {"q2_5": "Istruzione"}},
+      {"id": "q2_50_2", "question": "Extra education: Bias in valutazioni? (Art. 10)", "type": "Sì/No", "ref": "AI Act Art. 10", "notes": "Fairness grading.", "score_weight": 1, "risk_flag": "Medium", "condition": {"q2_5": "Istruzione"}},
+      {"id": "q2_50_3", "question": "Extra education: Oversight docente? (Art. 14)", "type": "Sì/No", "ref": "AI Act Art. 14", "notes": "Human in loop.", "score_weight": 1, "risk_flag": "High", "condition": {"q2_5": "Istruzione"}},
+      {"id": "q2_50_4", "question": "Extra education: Informativa a studenti? (Art. 13)", "type": "Sì/No", "ref": "AI Act Art. 13", "notes": "Transparency education.", "score_weight": 1, "risk_flag": "Medium", "condition": {"q2_5": "Istruzione"}},
+      {"id": "q2_50_5", "question": "Extra education: Dati studenti protetti? (Art. 10)", "type": "Sì/No", "ref": "AI Act Art. 10", "notes": "Privacy education.", "score_weight": 1, "risk_flag": "High", "condition": {"q2_5": "Istruzione"}}
+    ],
+    "q2_52_justice": [
+      {"id": "q2_52_1", "question": "Extra justice: AI in judicial decisions? (Annex III)", "type": "Sì/No", "ref": "AI Act Annex III", "notes": "High-risk justice.", "score_weight": 1, "risk_flag": "High", "condition": {"q2_5": "Giustizia"}},
+      {"id": "q2_52_2", "question": "Extra justice: Oversight giudice? (Art. 14)", "type": "Sì/No", "ref": "AI Act Art. 14", "notes": "Human oversight.", "score_weight": 1, "risk_flag": "High", "condition": {"q2_5": "Giustizia"}},
+      {"id": "q2_52_3", "question": "Extra justice: Explainability sentenze? (Art. 13)", "type": "Sì/No", "ref": "AI Act Art. 13", "notes": "XAI justice.", "score_weight": 1, "risk_flag": "Medium", "condition": {"q2_5": "Giustizia"}},
+      {"id": "q2_52_4", "question": "Extra justice: Bias in risk assessment? (Art. 10)", "type": "Sì/No", "ref": "AI Act Art. 10", "notes": "Fairness justice.", "score_weight": 1, "risk_flag": "High", "condition": {"q2_5": "Giustizia"}},
+      {"id": "q2_52_5", "question": "Extra justice: Audit trail decisioni? (Art. 12)", "type": "Sì/No", "ref": "AI Act Art. 12", "notes": "Tracciabilità justice.", "score_weight": 1, "risk_flag": "High", "condition": {"q2_5": "Giustizia"}}
+    ],
+    "q2_55_general": [
+      {"id": "q2_55_1", "question": "Extra general: Anti-riciclaggio implementato? (Art. 6)", "type": "Sì/No", "ref": "AI Act Art. 6", "notes": "Per finance.", "score_weight": 1, "risk_flag": "High"},
+      {"id": "q2_55_2", "question": "Extra general: Policy di responsible AI? (Art. 4)", "type": "Sì/No", "ref": "AI Act Art. 4", "notes": "Framework etico.", "score_weight": 1, "risk_flag": "Medium"},
+      {"id": "q2_55_3", "question": "Extra general: Formazione annuale su AI Act? (Art. 4)", "type": "Sì/No", "ref": "AI Act Art. 4", "notes": "Literacy.", "score_weight": 1, "risk_flag": "Medium"},
+      {"id": "q2_55_4", "question": "Extra general: Registro rischi interno? (Art. 9)", "type": "Sì/No", "ref": "AI Act Art. 9", "notes": "Risk register.", "score_weight": 1, "risk_flag": "High"},
+      {"id": "q2_55_5", "question": "Extra general: Sistema conforme a GDPR? (GDPR + AI Act)", "type": "Sì/No", "ref": "GDPR + AI Act", "notes": "Data protection.", "score_weight": 1, "risk_flag": "High"}
     ]
   }
 }

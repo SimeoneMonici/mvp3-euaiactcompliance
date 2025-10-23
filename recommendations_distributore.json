@@ -1,0 +1,5 @@
+{
+  "recommendations": [
+    {"question_id": "q2_30", "condition": "risposta = 'No'", "recommendation": "Notificare modifiche al sistema.", "priority": "Alta", "timeline": "Immediata", "reference": "Art. 28 AI Act"},
+    ]
+}

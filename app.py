@@ -3,13 +3,13 @@ import pandas as pd
 import json
 from questions_config import questions, per_system_qs, extra_qs
 from utils import render_question
-from gap_calculator import calculate_results, check_condition
-import openpyxl
+from gap_calculator import calculate_results, check_condition, flatten_extra_qs
 from io import BytesIO
 
-st.title("AI Compliance Analyzer - Web App v6.84")
+st.set_page_config(page_title="AI Compliance v15.4", layout="wide")
+st.title("AI Compliance Analyzer - **v15.4**")
 
-# Inizializzazione stato
+# --- INIZIALIZZAZIONE ---
 if 'answers' not in st.session_state:
     st.session_state.answers = {q["id"]: "" for q in questions}
 if 'system_answers' not in st.session_state:
@@ -20,250 +20,212 @@ if 'num_systems' not in st.session_state:
     st.session_state.num_systems = 1
 if 'current_system' not in st.session_state:
     st.session_state.current_system = 0
-if 'excluded' not in st.session_state:
-    st.session_state.excluded = [False] * st.session_state.num_systems
 
-# Sidebar
+# --- SIDEBAR ---
 with st.sidebar:
-    st.header("Navigazione")
-    if st.button("Reinizializza"):
+    st.header("**Navigazione v15.4**")
+    if st.button("🔄 Reinizializza"):
         for key in list(st.session_state.keys()):
             del st.session_state[key]
         st.rerun()
-    if st.session_state.step > 0:
-        if st.button("Indietro"):
-            st.session_state.step -= 1
-            st.session_state.current_system = 0
-            st.rerun()
-    st.write(f"Step: {st.session_state.step} / 3")
-    st.subheader("Risposte Chiave")
-    if 'answers' in st.session_state:
-        st.write(f"Settore: {st.session_state.answers.get('q1_1', 'N/A')}")
-        st.write(f"Dimensione: {st.session_state.answers.get('q1_2', 'N/A')}")
-    if 'system_answers' in st.session_state:
-        for i, sys in enumerate(st.session_state.system_answers):
-            ruolo = sys.get('q2_4', 'N/A')
-            st.write(f"Sistema {i+1}: {sys.get('q2_1', 'N/A')} (Ruolo: {ruolo}, Caso: {sys.get('q2_5', 'N/A')}, Rischio: {sys.get('q2_8', 'N/A')})")
+    if st.session_state.step > 0 and st.button("⬅️ Indietro"):
+        st.session_state.step -= 1
+        st.rerun()
+    st.write(f"**Step:** {st.session_state.step}/3")
+    sys = st.session_state.system_answers[st.session_state.current_system]
+    st.subheader("**Scelte Chiave**")
+    st.write(f"**Settore:** {st.session_state.answers.get('q1_1', '')}")
+    st.write(f"**Ruolo:** {sys.get('q2_4', '')}")
+    st.write(f"**Caso d'uso:** {sys.get('q2_5', '')}")
+    st.write(f"**Rischio:** {sys.get('q2_8', '')}")
 
-# Step 0: Profilo Aziendale
+# --- CARICA RECOMMENDATIONS ---
+def load_recommendations(role):
+    role_map = {
+        "Sviluppatore": "recommendations_sviluppatore.json",
+        "Utilizzatore": "recommendations_user.json",
+        "Importatore": "recommendations_importer.json",
+        "Distributore": "recommendations_distributore.json"
+    }
+    path = role_map.get(role, "recommendations_general.json")
+    try:
+        with open(path, 'r', encoding='utf-8') as f:
+            data = json.load(f)
+            return {r["question_id"]: r for r in data["recommendations"]}
+    except:
+        return {}
+
+# --- STEP 0 ---
 if st.session_state.step == 0:
-    st.header("Profilo Aziendale")
-    placeholders = {q["id"]: st.empty() for q in questions}
-    for q in questions:
-        if not q.get('condition') or all(st.session_state.answers.get(cond_id, "") == cond_val for cond_id, cond_val in q.get('condition', {}).items()):
-            with placeholders[q["id"]]:
-                st.markdown(f"{q['question']}")
-                current_answer = render_question(q, q["id"], st.session_state.answers.get(q["id"], ""))
-                st.session_state.answers[q["id"]] = current_answer
-                if q["id"] == "q1_1" and current_answer in ["Difesa/Militare", "Sicurezza Nazionale"]:
-                    st.warning("Settore potenzialmente escluso dall'AI Act (Art. 2).")
-    with st.sidebar:
-        st.number_input("Numero sistemi IA", min_value=1, value=st.session_state.num_systems, key="num_systems_input")
-        st.session_state.num_systems = st.session_state.num_systems_input
-        st.session_state.system_answers = st.session_state.system_answers[:st.session_state.num_systems] + [{} for _ in range(max(0, st.session_state.num_systems - len(st.session_state.system_answers)))]
-        st.session_state.excluded = st.session_state.excluded[:st.session_state.num_systems] + [False for _ in range(max(0, st.session_state.num_systems - len(st.session_state.excluded)))]
-        if st.button("Avanti a Inventory Sistemi"):
-            st.session_state.step = 1
-            st.rerun()
+    st.header("**Step 0: Profilo Aziendale**")
+    with st.expander("1. Profilo Aziendale", expanded=True):
+        for q in questions:
+            st.session_state.answers[q["id"]] = render_question(q, q["id"], st.session_state.answers.get(q["id"], ""))
+            if q.get("ref"):
+                st.caption(f"**Riferimento:** {q['ref']}")
+    if st.button("➡️ Step 1"):
+        st.session_state.step = 1
+        st.rerun()
 
-# Step 1: Inventory Sistemi
+# --- STEP 1: BASE INVENTORY ---
 elif st.session_state.step == 1:
-    st.header(f"Inventory Sistemi IA ({st.session_state.current_system + 1}/{st.session_state.num_systems})")
-    sys_ans = st.session_state.system_answers[st.session_state.current_system]
-    with st.form(key=f"system_form_{st.session_state.current_system}"):
-        placeholders = {q["id"]: st.empty() for q in per_system_qs}
-        for q in per_system_qs:
-            condition_met = check_condition(q.get('condition', {}), {**st.session_state.answers, **sys_ans})
-            if condition_met:
-                with placeholders[q["id"]]:
-                    st.markdown(f"{q['question']}")
-                    sys_ans[q['id']] = render_question(q, q["id"], sys_ans.get(q["id"], ""))
-        if st.form_submit_button("Salva e Avanza"):
+    st.header(f"**Step 1: Inventory Base – Sistema {st.session_state.current_system + 1}/{st.session_state.num_systems}**")
+    sys = st.session_state.system_answers[st.session_state.current_system]
+    with st.form("base"):
+        for q in per_system_qs[:6]:
+            sys[q["id"]] = render_question(q, q["id"], sys.get(q["id"], ""))
+            if q.get("ref"):
+                st.caption(f"**Riferimento:** {q['ref']}")
+        if st.form_submit_button("Salva e Vai a Step 2"):
             st.session_state.step = 2
             st.rerun()
-    with st.sidebar:
-        if st.button("Aggiungi Sistema"):
-            st.session_state.num_systems += 1
-            st.session_state.system_answers.append({})
-            st.session_state.excluded.append(False)
-            st.rerun()
 
-# Step 2: Domande Extra
+# --- STEP 2: DOMANDE CONDIZIONATE + EXPANDER ---
 elif st.session_state.step == 2:
-    st.header("Domande Extra Parametrizzate")
-    sys_ans = st.session_state.system_answers[st.session_state.current_system]
-    st.session_state.excluded[st.session_state.current_system] = False
-    st.write(f"Basato su tue risposte (Settore: {st.session_state.answers.get('q1_1', 'N/A')}, Ruolo: {sys_ans.get('q2_4', 'N/A')}, Rischio: {sys_ans.get('q2_8', 'N/A')}, Caso d'uso: {sys_ans.get('q2_5', 'N/A')}), vedrai domande raggruppate.")
-    with st.form(key=f"extra_form_{st.session_state.current_system}"):
-        seen_questions = set()
-        displayed_questions = {}
-        all_extra_questions = []
-        for cat_val in extra_qs.values():
-            if isinstance(cat_val, dict):
-                for sub_cat, sub_qs in cat_val.items():
-                    all_extra_questions.extend(sub_qs)
-            else:
-                all_extra_questions.extend(cat_val)
-        categories = ['settore', 'esclusioni', 'ruolo', 'rischio', 'caso_uso']
-        for cat in categories:
-            if cat in extra_qs and isinstance(extra_qs[cat], dict):
-                for sub_cat, sub_qs in extra_qs[cat].items():
-                    for q in sub_qs:
-                        q_id = q['id']
-                        cond = q.get('condition', {})
-                        if cat != 'esclusioni' and check_condition(cond, {**st.session_state.answers, **sys_ans}) and q_id not in seen_questions:
-                            displayed_questions.setdefault(cat, []).append(q)
-                            seen_questions.add(q_id)
-        if 'esclusioni' in extra_qs:
-            for q in extra_qs['esclusioni']:
-                q_id = q['id']
-                if q_id not in seen_questions:
-                    displayed_questions.setdefault('esclusioni', []).append(q)
-                    seen_questions.add(q_id)
-        critical_sectors = ["Sanità", "Forze dell'ordine", "Immigrazione", "Infrastrutture critiche", "Componenti di sicurezza"]
-        sector = st.session_state.answers.get('q1_1', '')
-        if sector in critical_sectors and 'settore_critico' in extra_qs:
-            for q in extra_qs['settore_critico'].get(sector, []):
-                q_id = q['id']
-                if q_id not in seen_questions:
-                    displayed_questions.setdefault('settore_critico', []).append(q)
-                    seen_questions.add(q_id)
-        # Render con subheader
-        if 'settore' in displayed_questions and st.session_state.answers.get('q1_1'):
-            st.subheader(f"Domande per Settore: {st.session_state.answers['q1_1']} ({', '.join([ref['source'] for q in displayed_questions['settore'] for ref in q.get('references', []) if ref] or ['N/A'])})")
-            for q in displayed_questions.get('settore', []):
-                st.markdown(f"{q['question']}")
-                sys_ans[q['id']] = render_question(q, f"{q['id']}_settore", sys_ans.get(q['id'], ""))
-        if 'esclusioni' in displayed_questions:
-            st.subheader(f"Verifica Esclusioni ({', '.join([ref['source'] for q in displayed_questions['esclusioni'] for ref in q.get('references', []) if ref] or ['N/A'])})")
-            for q in displayed_questions.get('esclusioni', []):
-                st.markdown(f"{q['question']}")
-                sys_ans[q['id']] = render_question(q, f"{q['id']}_esclusioni", sys_ans.get(q['id'], ""))
-                if q['id'] in ['q2_50', 'q2_52', 'q2_97', 'q2_92', 'q2_93', 'q2_94', 'q2_95'] and sys_ans[q['id']] == "Sì":
-                    st.session_state.excluded[st.session_state.current_system] = True
-                    st.warning("Sistema escluso dall'AI Act (Art. 2).")
-        if not st.session_state.excluded[st.session_state.current_system]:
-            if 'settore_critico' in displayed_questions and sector in critical_sectors:
-                st.subheader(f"Domande Critiche per Settore: {sector}")
-                for q in displayed_questions.get('settore_critico', []):
-                    st.markdown(f"{q['question']}")
-                    sys_ans[q['id']] = render_question(q, f"{q['id']}_settore_critico", sys_ans.get(q['id'], ""))
-            if 'ruolo' in displayed_questions and sys_ans.get('q2_4'):
-                st.subheader(f"Domande per Ruolo: {sys_ans['q2_4']}")
-                for q in displayed_questions.get('ruolo', []):
-                    st.markdown(f"{q['question']}")
-                    sys_ans[q['id']] = render_question(q, f"{q['id']}_ruolo", sys_ans.get(q['id'], ""))
-            if 'rischio' in displayed_questions and sys_ans.get('q2_8'):
-                st.subheader(f"Domande per Rischio: {sys_ans['q2_8']}")
-                for q in displayed_questions.get('rischio', []):
-                    st.markdown(f"{q['question']}")
-                    sys_ans[q['id']] = render_question(q, f"{q['id']}_rischio", sys_ans.get(q['id'], ""))
-            if 'caso_uso' in displayed_questions and sys_ans.get('q2_5'):
-                st.subheader(f"Domande per Caso d'Uso: {sys_ans['q2_5']}")
-                for q in displayed_questions.get('caso_uso', []):
-                    st.markdown(f"{q['question']}")
-                    sys_ans[q['id']] = render_question(q, f"{q['id']}_caso_uso", sys_ans.get(q['id'], ""))
-        if st.form_submit_button("Salva e Avanza"):
-            if st.session_state.excluded[st.session_state.current_system]:
-                st.session_state.step = 3
-            elif st.session_state.current_system < st.session_state.num_systems - 1:
-                st.session_state.current_system += 1
-            else:
-                st.session_state.step = 3
-            st.rerun()
-    with st.expander("Log Debug"):
-        for q in all_extra_questions:
-            q_id = q['id']
-            cond = q.get('condition', {})
-            if check_condition(cond, {**st.session_state.answers, **sys_ans}):
-                if q_id in seen_questions:
-                    if isinstance(cond, dict):
-                        st.write(f"Debug: Mostrando {q_id} perché condition {cond} ok con responses { {k: v for k, v in {**st.session_state.answers, **sys_ans}.items() if k in cond} }")
-                    else:
-                        st.write(f"Debug: Mostrando {q_id} perché condition {cond} (semplice booleano) ok")
+    st.header("**Step 2: Domande Dettagliate**")
+    sys = st.session_state.system_answers[st.session_state.current_system]
+    role = sys.get("q2_4", "")
+    with st.form("detailed"):
+        groups = {
+            "Sviluppatore": [],
+            "Utilizzatore": [],
+            "High-Risk": [],
+            "GPAI": [],
+            "Generativa": [],
+            "Generali": []
+        }
+        supply_chain_qs = []
+        for q in per_system_qs[6:]:
+            cond = q.get("condition")
+            show = cond is None or all(
+                sys.get(k, "") == v if isinstance(v, str) else sys.get(k, "") in v
+                for k, v in cond.items()
+            )
+            if show:
+                if role in ["Importatore", "Distributore"]:
+                    supply_chain_qs.append(q)
+                elif cond and "q2_4" in cond:
+                    r = cond["q2_4"]
+                    if isinstance(r, list):
+                        r = r[0]
+                    if r == role:
+                        groups[r].append(q)
+                elif cond and "q2_8" in cond and "Alto" in cond["q2_8"]:
+                    groups["High-Risk"].append(q)
+                elif cond and "q2_14" in cond:
+                    groups["GPAI"].append(q)
+                elif cond and "q2_37" in cond:
+                    groups["Generativa"].append(q)
                 else:
-                    st.write(f"Debug: Escluso {q_id} perché condition {cond} non soddisfatta o già visto")
-    with st.sidebar:
-        if st.button("Avanti Sistema"):
-            st.session_state.current_system += 1
-            if st.session_state.current_system >= st.session_state.num_systems:
-                st.session_state.step = 3
-            st.rerun()
-        if st.button("Aggiungi Sistema"):
-            st.session_state.num_systems += 1
-            st.session_state.system_answers.append({})
-            st.session_state.excluded.append(False)
+                    groups["Generali"].append(q)
+        # RENDER SUPPLY CHAIN
+        if role in ["Importatore", "Distributore"] and supply_chain_qs:
+            with st.expander("**Obblighi Supply Chain**", expanded=True):
+                for q in supply_chain_qs:
+                    sys[q["id"]] = render_question(q, q["id"], sys.get(q["id"], ""))
+                    if q.get("ref"):
+                        st.caption(f"**Riferimento:** {q['ref']}")
+        # ALTRI EXPANDER
+        for group_name, qs in groups.items():
+            if qs:
+                with st.expander(f"**{group_name}**", expanded=True):
+                    for q in qs:
+                        sys[q["id"]] = render_question(q, q["id"], sys.get(q["id"], ""))
+                        if q.get("ref"):
+                            st.caption(f"**Riferimento:** {q['ref']}")
+        # EXTRA
+        for cat, sub_qs in extra_qs.items():
+            if isinstance(sub_qs, list):
+                cat_show = any(
+                    q.get("condition") is None or all(
+                        sys.get(k, "") == v if isinstance(v, str) else sys.get(k, "") in v
+                        for k, v in q.get("condition", {}).items()
+                    )
+                    for q in sub_qs
+                )
+                if cat_show:
+                    with st.expander(f"**Extra: {cat.upper()}**", expanded=True):
+                        for q in sub_qs:
+                            cond = q.get("condition", {})
+                            q_show = cond is None or all(
+                                sys.get(k, "") == v if isinstance(v, str) else sys.get(k, "") in v
+                                for k, v in cond.items()
+                            )
+                            if q_show:
+                                sys[q["id"]] = render_question(q, q["id"], sys.get(q["id"], ""))
+                                if q.get("ref"):
+                                    st.caption(f"**Riferimento:** {q['ref']}")
+        if st.form_submit_button("Salva e Vai a Risultati"):
+            general_score, gaps, system_scores, system_gaps_list = calculate_results(st.session_state)
+            st.session_state.results = (general_score, gaps, system_scores, system_gaps_list)
+            st.session_state.step = 3
             st.rerun()
 
-# Step 3: Risultati
+# --- STEP 3: RISULTATI ---
 elif st.session_state.step == 3:
-    st.header("Risultati")
-    if any(st.session_state.excluded):
-        st.warning("Alcuni sistemi esclusi dall'AI Act (Art. 2). Risultati parziali.")
-    result = calculate_results(st.session_state)
-    general_pct, general_gaps, system_scores, system_gaps_list = result
-    st.write(f"Totale Conformità Generale: {general_pct:.2f}%")
-    for i, sys_pct in enumerate(system_scores):
-        st.write(f"Sistema {i+1}: {sys_pct:.2f}%")
-    avg_sys = sum(system_scores) / len(system_scores) if system_scores else 0
-    st.write(f"Media Sistemi: {avg_sys:.2f}%")
-    st.header("Censimento Sistemi IA")
-    censimento_data = []
-    for i, sys_ans in enumerate(st.session_state.system_answers):
-        censimento_data.append({
-            "Sistema": i+1,
-            "Nome": sys_ans.get("q2_1", "Non specificato"),
-            "Descrizione": sys_ans.get("q2_2", "Non specificato"),
-            "Funzione": sys_ans.get("q2_3", "Non specificato"),
-            "Ruolo": sys_ans.get('q2_4', 'Non specificato'),
-            "Caso d'uso": sys_ans.get('q2_5', 'Non specificato'),
-            "Rischio": sys_ans.get('q2_8', 'N/A'),
-            "Punteggio Conformità": f"{system_scores[i]:.2f}%" if i < len(system_scores) else "N/A"
-        })
-    df_censimento = pd.DataFrame(censimento_data)
-    st.table(df_censimento)
-    st.header("Roadmap di Adeguamento")
-    all_gaps = general_gaps + [gap for sys_gaps in system_gaps_list for gap in sys_gaps]
-    if all_gaps:
-        df = pd.DataFrame(all_gaps)
-        st.table(df[["Gap", "Risposta", "Azione", "Priorità", "Tempistica", "Risk"]])
-        csv = df.to_csv(index=False, encoding='utf-8-sig').encode('utf-8')
-        st.download_button(label="Scarica Roadmap CSV", data=csv, file_name="roadmap_gaps.csv", mime="text/csv")
+    st.header("**Step 3: Risultati v15.4**")
+    general_score, gaps, system_scores, system_gaps_list = st.session_state.results
+    st.metric("**Conformità Generale**", f"{general_score:.1f}%")
+    for i, pct in enumerate(system_scores):
+        st.metric(f"**Sistema {i+1}**", f"{pct:.1f}%")
+
+    st.subheader("Gap Analysis")
+    gap_list = []
+    # GENERALE
+    for gid, g in gaps.items():
+        if gid.startswith('q1_'):
+            gap_list.append({"Gap": f"{gid}: {g['question']}", "Risposta": g["response"], "Risk": g["risk_flag"]})
+    # SISTEMA
+    for sys_gaps in system_gaps_list:
+        gap_list.extend(sys_gaps)
+    if gap_list:
+        df = pd.DataFrame(gap_list)
+        st.dataframe(df.style.set_properties(**{'text-align': 'left', 'font-size': '14px'}).set_table_styles([
+            {'selector': 'th.col0', 'props': [('width', '400px'), ('font-size', '14px')]},
+            {'selector': 'td.col0', 'props': [('font-size', '14px')]}
+        ]), use_container_width=True)
     else:
-        st.warning("Nessun gap rilevato.")
-    # Riepilogo Risposte
-    st.header("Riepilogo Risposte")
-    riepilogo_data = []
-    for q_id, ans in st.session_state.answers.items():
-        matching_question = next((q for q in questions if q['id'] == q_id), None)
-        riepilogo_data.append({"Domanda": matching_question['question'] if matching_question else q_id, "Risposta": str(ans)})
-    for sys_idx, sys_ans in enumerate(st.session_state.system_answers):
-        for q_id, ans in sys_ans.items():
-            all_questions = per_system_qs + [q for cat in extra_qs.values() for sub in (cat.values() if isinstance(cat, dict) else [cat]) for q in (sub if isinstance(sub, list) else [sub])]
-            matching_question = next((q for q in all_questions if q['id'] == q_id), None)
-            riepilogo_data.append({"Domanda": matching_question['question'] if matching_question else q_id, "Risposta": str(ans), "Sistema": sys_idx + 1})
-    df_riepilogo = pd.DataFrame(riepilogo_data)
-    st.table(df_riepilogo)
-    # Debug in fondo
-    with st.expander("Log Debug"):
-        st.write("Nessun log di debug attivo in questa sezione.")
-    # Esportazione Excel
-    wb = openpyxl.Workbook()
-    ws_censimento = wb.active
-    ws_censimento.title = "Censimento"
-    ws_censimento.append(["Sistema", "Nome", "Descrizione", "Funzione", "Ruolo", "Caso d'uso", "Rischio", "Punteggio Conformità"])
-    for row in censimento_data:
-        ws_censimento.append([row["Sistema"], row["Nome"], row["Descrizione"], row["Funzione"], row["Ruolo"], row["Caso d'uso"], row["Rischio"], row["Punteggio Conformità"]])
-    ws_roadmap = wb.create_sheet("Roadmap")
-    ws_roadmap.append(["Gap", "Risposta", "Azione", "Priorità", "Tempistica", "Risk"])
-    for row in all_gaps:
-        ws_roadmap.append([row["Gap"], row["Risposta"], row["Azione"], row["Priorità"], row["Tempistica"], row["Risk"]])
-    ws_riepilogo = wb.create_sheet("Riepilogo")
-    ws_riepilogo.append(["Metrica", "Valore"])
-    ws_riepilogo.append(["Totale Conformità Generale", f"{general_pct:.2f}%"])
-    ws_riepilogo.append(["Media Sistemi", f"{avg_sys:.2f}%"])
-    for i, score in enumerate(system_scores):
-        ws_riepilogo.append([f"Sistema {i+1} Conformità", f"{score:.2f}%"])
-    output = BytesIO()
-    wb.save(output)
-    st.download_button(label="Scarica Report Excel", data=output.getvalue(), file_name="ai_compliance_report.xlsx", mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+        st.success("Nessun gap critico!")
+
+    st.subheader("Roadmap")
+    role = st.session_state.system_answers[0].get("q2_4", "")
+    recs = load_recommendations(role)
+    roadmap = []
+    for gap in gap_list:
+        q_id = gap["Gap"].split(":")[0].strip()
+        r = recs.get(q_id)
+        if r:
+            cond = r.get("condition", "")
+            if "risposta = 'No'" in cond and gap["Risposta"] == "No":
+                roadmap.append({
+                    "Gap": gap["Gap"],
+                    "Azione": r["recommendation"],
+                    "Priorità": r["priority"],
+                    "Tempistica": r["timeline"],
+                    "Riferimento": r.get("reference", ""),
+                    "Benefici": r.get("benefits", "")
+                })
+            elif "risposta < 3" in cond and gap["Risposta"] < 3:
+                roadmap.append({
+                    "Gap": gap["Gap"],
+                    "Azione": r["recommendation"],
+                    "Priorità": r["priority"],
+                    "Tempistica": r["timeline"],
+                    "Riferimento": r.get("reference", ""),
+                    "Benefici": r.get("benefits", "")
+                })
+    if roadmap:
+        st.dataframe(roadmap)
+    else:
+        st.success("Nessuna azione richiesta!")
+
+    # --- DEBUG IN EXPANDER ---
+    with st.expander("**DEBUG: Risposte Complete**", expanded=False):
+        st.write("**Generali:**", st.session_state.answers)
+        for i, sys in enumerate(st.session_state.system_answers):
+            st.write(f"**Sistema {i+1}:**", sys)
+
+    if st.button("🔄 Nuova Analisi"):
+        for k in list(st.session_state.keys()):
+            del st.session_state[k]
+        st.rerun()

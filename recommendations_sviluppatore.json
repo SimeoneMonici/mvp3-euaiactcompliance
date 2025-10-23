@@ -1,0 +1,91 @@
+{
+  "recommendations": [
+    {
+      "question_id": "q2_24",
+      "condition": "risposta = 'No'",
+      "recommendation": "Implementa un sistema di gestione della qualità certificato ISO 9001 per i processi IA.",
+      "priority": "Alta",
+      "timeline": "Q2 2025",
+      "reference": "Art. 17 AI Act",
+      "benefits": "Standardizza i processi e riduce errori."
+    },
+    {
+      "question_id": "q2_25",
+      "condition": "risposta = 'No'",
+      "recommendation": "Redigi la documentazione tecnica completa conforme all'Art. 11.",
+      "priority": "Media",
+      "timeline": "Q3 2025",
+      "reference": "Art. 11 AI Act",
+      "benefits": "Facilita audit e certificazioni."
+    },
+    {
+      "question_id": "q2_26",
+      "condition": "risposta = 'No'",
+      "recommendation": "Conduci un assessment di rischio formale secondo Art. 9.",
+      "priority": "Critica",
+      "timeline": "Q1 2025",
+      "reference": "Art. 9 AI Act",
+      "benefits": "Evita sanzioni fino a 35M€."
+    },
+    {
+      "question_id": "q2_90",
+      "condition": "risposta = 'No'",
+      "recommendation": "Ritira immediatamente i sistemi non conformi e notifica l'autorità.",
+      "priority": "Alta",
+      "timeline": "Q3 2025",
+      "reference": "Art. 24 AI Act",
+      "benefits": "Evita multe e danni reputazionali."
+    },
+    {
+      "question_id": "q2_35",
+      "condition": "risposta = 'No'",
+      "recommendation": "Esegui un secondo assessment di rischio entro 6 mesi.",
+      "priority": "Alta",
+      "timeline": "Q2 2025",
+      "reference": "Art. 9 AI Act",
+      "benefits": "Conformità obbligatoria per alto rischio."
+    },
+    {
+      "question_id": "q2_10",
+      "condition": "risposta = 'No'",
+      "recommendation": "Implementa misure di cybersecurity (ISO 27001, penetration testing).",
+      "priority": "Alta",
+      "timeline": "Q2 2025",
+      "reference": "Art. 15 AI Act",
+      "benefits": "Protegge da attacchi e perdite dati."
+    },
+    {
+      "question_id": "q2_9",
+      "condition": "risposta < 3",
+      "recommendation": "Migliora la qualità dei dati di training, rimuovi bias.",
+      "priority": "Alta",
+      "timeline": "Q2 2025",
+      "reference": "Art. 10 AI Act",
+      "benefits": "Riduce rischi etici e discriminazioni."
+    },
+    
+	{
+	  "question_id": "q2_48",
+	  "condition": "risposta = 'No'",
+	  "recommendation": "Mitigare bias nello scoring con tecniche di fairness.",
+	  "priority": "Alta",
+	  "timeline": "Q2 2025",
+	  "reference": "Art. 10 AI Act",
+	  "benefits": "Riduce discriminazioni."
+	},
+	{
+	  "question_id": "q2_42",
+	  "condition": "risposta < 3",
+	  "recommendation": "Valutare impatto su diritti fondamentali.",
+	  "priority": "Alta",
+	  "timeline": "Q1 2025",
+	  "reference": "Art. 9 AI Act",
+	  "benefits": "Protegge diritti umani."
+	},
+	{"question_id": "q2_14", "condition": "risposta = 'Sì'", "recommendation": "Implementare trasparenza per GPAI.", "priority": "Alta", "timeline": "Q1 2025", "reference": "Art. 53 AI Act"},
+  {"question_id": "q2_15", "condition": "risposta = 'Sì'", "recommendation": "Notificare AI Office per rischi sistemici.", "priority": "Critica", "timeline": "Immediata", "reference": "Art. 55 AI Act"},
+  {"question_id": "q2_37", "condition": "risposta = 'Sì'", "recommendation": "Implementare watermarking per contenuti generati.", "priority": "Alta", "timeline": "Q1 2025", "reference": "Art. 52 AI Act"},
+  {"question_id": "q2_33", "condition": "risposta = 'No'", "recommendation": "Implementare policy copyright per dati di training.", "priority": "Alta", "timeline": "Q2 2025", "reference": "Code of Practice Copyright"},
+  {"question_id": "q2_16", "condition": "risposta = 'Sì'", "recommendation": "Sospendere immediatamente il sistema.", "priority": "Critica", "timeline": "Immediata", "reference": "Art. 5 AI Act"}
+  ]
+}
