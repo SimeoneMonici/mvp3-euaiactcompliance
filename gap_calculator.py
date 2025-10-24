@@ -38,7 +38,6 @@ def calculate_gaps(questions_data: Dict, responses: Dict) -> Dict:
                     gaps[q_id] = {"question": q["question"], "response": resp, "risk_flag": risk}
     return gaps
 
-
 def calculate_conformity_score(questions_data: Dict, responses: Dict, gaps: Dict) -> float:
     total = 0
     compliant = 0
@@ -60,19 +59,22 @@ def calculate_results(session_state: Dict) -> tuple:
     data = load_questions()
     answers = session_state.get('answers', {})
     system_answers = session_state.get('system_answers', [{}])
-    all_resp = {**answers, **{k: v for d in system_answers for k, v in d.items()}}
+    all_resp = {**answers, **{k: v for sys in system_answers for k, v in sys.items()}}
     gaps = calculate_gaps(data, all_resp)
     general_score = calculate_conformity_score(data, answers, {k: v for k, v in gaps.items() if k.startswith('q1_')})
     system_scores = []
     system_gaps_list = []
-    for sys in system_answers:
+    for i, sys in enumerate(system_answers):
         sys_resp = {**answers, **sys}
         sys_gaps = calculate_gaps(data, sys_resp)
         score = calculate_conformity_score(data, sys_resp, sys_gaps)
         system_scores.append(score)
-        system_gaps_list.append([{
-            "Gap": f"{gid}: {g['question']}",
-            "Risposta": g["response"],
-            "Risk": g["risk_flag"]
-        } for gid, g in sys_gaps.items() if not gid.startswith('q1_')])
+        system_gaps_list.append({
+            "system_name": sys.get('Nome', sys.get('q2_4', f'Sistema {i+1}')),
+            "Gaps": [{
+                "Gap": f"{gid}: {g['question']}",
+                "Risposta": g["response"],
+                "Risk": g["risk_flag"]
+            } for gid, g in sys_gaps.items() if not gid.startswith('q1_')]
+        })
     return general_score, gaps, system_scores, system_gaps_list
