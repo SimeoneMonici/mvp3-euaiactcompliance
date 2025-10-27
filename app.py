@@ -3,12 +3,11 @@ import pandas as pd
 import json
 from questions_config import questions, per_system_qs, extra_qs
 from utils import render_question
-from gap_calculator import calculate_results, check_condition
+from gap_calculator import calculate_results
 from io import BytesIO
-import csv
 
-st.set_page_config(page_title="AI Compliance v15.8", layout="wide")
-st.title("AI Compliance Analyzer - **v15.8**")
+st.set_page_config(page_title="AI Compliance v16.6", layout="wide")
+st.title("AI Compliance Analyzer - **v16.6**")
 
 # --- INIZIALIZZAZIONE ---
 if 'answers' not in st.session_state:
@@ -24,7 +23,7 @@ if 'current_system' not in st.session_state:
 
 # --- SIDEBAR ---
 with st.sidebar:
-    st.header("**Navigazione v15.8**")
+    st.header("**Navigazione v16.6**")
     if st.button("Reinizializza"):
         for key in list(st.session_state.keys()):
             del st.session_state[key]
@@ -32,21 +31,29 @@ with st.sidebar:
     if st.session_state.step > 0 and st.button("Indietro"):
         st.session_state.step -= 1
         st.rerun()
-    st.write(f"**Step:** {st.session_state.step}/3")
-
-    # SCELTE CHIAVE
+    st.write(f"**Step:** {st.session_state.step}/5")
     sys = st.session_state.system_answers[st.session_state.current_system]
     st.subheader("**Scelte Chiave**")
     st.write(f"**Settore:** {st.session_state.answers.get('q1_1', '')}")
     st.write(f"**Ruolo:** {sys.get('q2_4', '')}")
     st.write(f"**Caso d'uso:** {sys.get('q2_5', '')}")
     st.write(f"**Rischio:** {sys.get('q2_8', '')}")
-
-    # ELENCO SISTEMI
     st.subheader("**Sistemi IA**")
     for i, s in enumerate(st.session_state.system_answers):
         name = s.get("q2_1", s.get("q2_4", f"Sistema {i+1}"))
         st.write(f"**{name}**")
+
+# --- MAPPA TITOLI SETTORI ---
+SECTOR_TITLES = {
+    "q2_38_sanita": "Sanità/Biometria",
+    "q2_40_forze": "Forze dell'Ordine",
+    "q2_42_immig": "Immigrazione",
+    "q2_45_infra": "Infrastrutture Critiche",
+    "q2_48_finance": "Finanza/Scoring",
+    "q2_50_education": "Istruzione",
+    "q2_52_justice": "Giustizia",
+    "q2_55_general": "Obblighi Generali"
+}
 
 # --- CARICA RECOMMENDATIONS ---
 def load_recommendations(role):
@@ -61,13 +68,14 @@ def load_recommendations(role):
         with open(path, 'r', encoding='utf-8') as f:
             data = json.load(f)
             return {r["question_id"]: r for r in data["recommendations"]}
-    except:
+    except FileNotFoundError:
+        st.error(f"File recommendations mancante: {path}")
         return {}
 
-# --- STEP 0: PROFILO AZIENDALE ---
+# --- STEP 0 ---
 if st.session_state.step == 0:
     st.header("**Step 0: Profilo Aziendale**")
-    with st.expander("1. Governance Aziendale", expanded=True):
+    with st.expander("Governance", expanded=True):
         for q in questions:
             st.session_state.answers[q["id"]] = render_question(q, q["id"], st.session_state.answers.get(q["id"], ""))
             if q.get("ref"):
@@ -76,7 +84,7 @@ if st.session_state.step == 0:
         st.session_state.step = 1
         st.rerun()
 
-# --- STEP 1: INVENTORY BASE ---
+# --- STEP 1 ---
 elif st.session_state.step == 1:
     st.header("**Step 1: Inventory Base**")
     num = st.number_input("Numero Sistemi IA:", min_value=1, max_value=10, value=st.session_state.num_systems)
@@ -88,7 +96,6 @@ elif st.session_state.step == 1:
             st.session_state.system_answers = st.session_state.system_answers[:num]
         st.session_state.num_systems = num
         st.rerun()
-
     all_saved = True
     for i in range(num):
         with st.expander(f"Sistema {i+1}", expanded=i == st.session_state.current_system):
@@ -104,22 +111,22 @@ elif st.session_state.step == 1:
             if not all(sys.get(q["id"]) for q in per_system_qs[:6]):
                 all_saved = False
                 st.warning(f"Sistema {i+1}: Compila tutte le domande base")
-    if all_saved and st.button("Vai a Step 2"):
+    if all_saved and st.button("Step 2"):
         st.session_state.step = 2
         st.rerun()
 
-# --- STEP 2: DOMANDE DETTAGLIATE PER TUTTI I SISTEMI ---
+# --- STEP 2 ---
 elif st.session_state.step == 2:
     st.header("**Step 2: Domande Dettagliate**")
     all_saved = True
     for i in range(st.session_state.num_systems):
-        with st.expander(f"Sistema {i+1} - {st.session_state.system_answers[i].get('q2_1', 'Senza nome')}", expanded=i == st.session_state.current_system):
+        with st.expander(f"Sistema {i+1}", expanded=i == st.session_state.current_system):
             sys = st.session_state.system_answers[i]
             role = sys.get("q2_4", "")
             with st.form(f"detailed_{i}"):
                 groups = {
                     "Sviluppatore": [], "Utilizzatore": [], "High-Risk": [],
-                    "GPAI": [], "Generativa": [], "Generali": []
+                    "Generali": []
                 }
                 supply_chain_qs = []
                 for q in per_system_qs[6:]:
@@ -138,13 +145,8 @@ elif st.session_state.step == 2:
                                 groups[r].append(q)
                         elif cond and "q2_8" in cond and "Alto" in cond["q2_8"]:
                             groups["High-Risk"].append(q)
-                        elif cond and "q2_14" in cond:
-                            groups["GPAI"].append(q)
-                        elif cond and "q2_37" in cond:
-                            groups["Generativa"].append(q)
                         else:
                             groups["Generali"].append(q)
-
                 if role in ["Importatore", "Distributore"] and supply_chain_qs:
                     with st.expander("**Obblighi Supply Chain**", expanded=True):
                         for q in supply_chain_qs:
@@ -158,8 +160,10 @@ elif st.session_state.step == 2:
                                 sys[q["id"]] = render_question(q, f"{q['id']}_{i}", sys.get(q["id"], ""))
                                 if q.get("ref"):
                                     st.caption(f"**Riferimento:** {q['ref']}")
+                # --- EXTRA SETTORI CON TITOLI CHIARI ---
                 for cat, sub_qs in extra_qs.items():
-                    if isinstance(sub_qs, list):
+                    if isinstance(sub_qs, list) and cat in SECTOR_TITLES:
+                        sector_name = SECTOR_TITLES[cat]
                         cat_show = any(
                             q.get("condition") is None or all(
                                 sys.get(k, "") == v if isinstance(v, str) else sys.get(k, "") in v
@@ -168,7 +172,7 @@ elif st.session_state.step == 2:
                             for q in sub_qs
                         )
                         if cat_show:
-                            with st.expander(f"**Extra: {cat.upper()}**", expanded=True):
+                            with st.expander(f"**Domande Extra per Settore {sector_name}**", expanded=True):
                                 for q in sub_qs:
                                     cond = q.get("condition", {})
                                     q_show = cond is None or all(
@@ -182,18 +186,70 @@ elif st.session_state.step == 2:
                 if st.form_submit_button("Salva Sistema"):
                     st.session_state.current_system = i
                     st.rerun()
-            if not all(sys.get(q["id"]) for q in per_system_qs[6:] if q.get("condition") is None or all(sys.get(k, "") == v if isinstance(v, str) else sys.get(k, "") in v for k, v in q.get("condition", {}).items())):
+            if not all(sys.get(q["id"]) for q in per_system_qs[6:] if q.get("condition") is None or all(sys.get(k, "") == v for k, v in q.get("condition", {}).items())):
                 all_saved = False
                 st.warning(f"Sistema {i+1}: Compila tutte le domande dettagliate")
+    if all_saved and st.button("Avanti"):
+        gpai = any(s.get("q2_14") == "Sì" for s in st.session_state.system_answers)
+        generativa = any(s.get("q2_37") == "Sì" for s in st.session_state.system_answers)
+        pmi = st.session_state.answers.get("q1_2", "").startswith("Piccola")
+        if gpai or generativa or pmi:
+            st.session_state.step = 3
+        else:
+            st.session_state.step = 5
+        st.rerun()
+
+# --- STEP 3 ---
+elif st.session_state.step == 3:
+    st.header("**Step 3: Specifiche Avanzate**")
+    all_saved = True
+    for i in range(st.session_state.num_systems):
+        sys = st.session_state.system_answers[i]
+        # GPAI
+        if sys.get("q2_14") == "Sì":
+            with st.expander(f"Sistema {i+1} - GPAI", expanded=True):
+                with st.form(f"gpai_{i}"):
+                    for q in extra_qs["GPAI"]:
+                        sys[q["id"]] = render_question(q, f"{q['id']}_{i}", sys.get(q["id"], ""))
+                        if q.get("ref"):
+                            st.caption(f"**Riferimento:** {q['ref']}")
+                    if st.form_submit_button("Salva GPAI"):
+                        st.rerun()
+                if not all(sys.get(q["id"]) for q in extra_qs["GPAI"]):
+                    all_saved = False
+        # Generativa
+        if sys.get("q2_37") == "Sì":
+            with st.expander(f"Sistema {i+1} - IA Generativa", expanded=True):
+                with st.form(f"generativa_{i}"):
+                    for q in extra_qs["Generativa"]:
+                        sys[q["id"]] = render_question(q, f"{q['id']}_{i}", sys.get(q["id"], ""))
+                        if q.get("ref"):
+                            st.caption(f"**Riferimento:** {q['ref']}")
+                    if st.form_submit_button("Salva Generativa"):
+                        st.rerun()
+                if not all(sys.get(q["id"]) for q in extra_qs["Generativa"]):
+                    all_saved = False
+    # PMI
+    if st.session_state.answers.get("q1_2", "").startswith("Piccola"):
+        with st.expander("Agevolazioni PMI", expanded=True):
+            with st.form("pmi"):
+                for q in extra_qs["PMI"]:
+                    st.session_state.answers[q["id"]] = render_question(q, q["id"], st.session_state.answers.get(q["id"], ""))
+                    if q.get("ref"):
+                        st.caption(f"**Riferimento:** {q['ref']}")
+                if st.form_submit_button("Salva PMI"):
+                    st.rerun()
+            if not all(st.session_state.answers.get(q["id"]) for q in extra_qs["PMI"]):
+                all_saved = False
     if all_saved and st.button("Calcola Risultati"):
         general_score, gaps, system_scores, system_gaps_list = calculate_results(st.session_state)
         st.session_state.results = (general_score, gaps, system_scores, system_gaps_list)
-        st.session_state.step = 3
+        st.session_state.step = 5
         st.rerun()
 
-# --- STEP 3: RISULTATI + ROADMAP PER SISTEMA ---
-elif st.session_state.step == 3:
-    st.header("**Step 3: Risultati v15.8**")
+# --- STEP 5: RISULTATI ---
+elif st.session_state.step == 5:
+    st.header("**Step 5: Risultati v16.6**")
     general_score, gaps, system_scores, system_gaps_list = st.session_state.results
     st.metric("**Conformità Generale**", f"{general_score:.1f}%")
     for i, pct in enumerate(system_scores):
@@ -210,10 +266,7 @@ elif st.session_state.step == 3:
             gap_list.append(gap)
     if gap_list:
         df = pd.DataFrame(gap_list)
-        st.dataframe(df.style.set_properties(**{'text-align': 'left', 'font-size': '14px'}).set_table_styles([
-            {'selector': 'th.col0', 'props': [('width', '400px'), ('font-size', '14px')]},
-            {'selector': 'td.col0', 'props': [('font-size', '14px')]}
-        ]), use_container_width=True)
+        st.dataframe(df, use_container_width=True)
     else:
         st.success("Nessun gap critico!")
     st.subheader("Roadmap")
@@ -256,14 +309,26 @@ elif st.session_state.step == 3:
     csv_data = generate_roadmap_csv()
     col1, col2 = st.columns(2)
     with col1:
-        st.download_button("Excel Completo", excel, "AI_Compliance_v15.8.xlsx", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+        st.download_button("Excel Completo", excel, "AI_Compliance_v16.6.xlsx", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
     with col2:
-        st.download_button("Roadmap CSV", csv_data, "Roadmap_v15.8.csv", "text/csv")
-    # --- DEBUG ---
-    with st.expander("**DEBUG: Risposte Complete**", expanded=False):
-        st.write("**Generali:**", st.session_state.answers)
+        st.download_button("Roadmap CSV", csv_data, "Roadmap_v16.6.csv", "text/csv")
+    # --- DEBUG STRUTTURATO ---
+    with st.expander("**DEBUG: Risposte per Step**", expanded=False):
+        st.write("**Step 0 – Profilo Aziendale**")
+        st.json({k: v for k, v in st.session_state.answers.items() if k.startswith("q1_") and not k.startswith("q3_")})
+        st.write("**Step 1-2 – Inventory + Settori**")
         for i, sys in enumerate(st.session_state.system_answers):
-            st.write(f"**Sistema {i+1}:**", sys)
+            base = {k: v for k, v in sys.items() if k.startswith("q2_") and not any(k.startswith(p) for p in ["q3_", "q4_"])}
+            extra = {k: v for k, v in sys.items() if any(k.startswith(cat) for cat in SECTOR_TITLES.keys())}
+            st.write(f"**Sistema {i+1} – Base**"); st.json(base)
+            if extra: st.write(f"**Sistema {i+1} – Extra Settore**"); st.json(extra)
+        st.write("**Step 3 – GPAI / Generativa / PMI**")
+        gpai_data = {k: v for s in st.session_state.system_answers for k, v in s.items() if k.startswith("q3_gpai_")}
+        gen_data = {k: v for s in st.session_state.system_answers for k, v in s.items() if k.startswith("q3_gen_")}
+        pmi_data = {k: v for k, v in st.session_state.answers.items() if k.startswith("q3_pmi_")}
+        if gpai_data: st.write("**GPAI**"); st.json(gpai_data)
+        if gen_data: st.write("**Generativa**"); st.json(gen_data)
+        if pmi_data: st.write("**PMI**"); st.json(pmi_data)
     if st.button("Nuova Analisi"):
         for k in list(st.session_state.keys()):
             del st.session_state[k]
