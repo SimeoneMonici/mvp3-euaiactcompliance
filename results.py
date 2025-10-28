@@ -35,7 +35,7 @@ def generate_excel():
         ws_dom.cell(1, col, header).font = Font(bold=True)
     row = 2
     for q in questions:
-        ws_dom.cell(row, 1, q["section"])
+        ws_dom.cell(row, 1, q.get("expander", q.get("section", "N/A")))
         ws_dom.cell(row, 2, q["question"])
         ws_dom.cell(row, 3, q.get("type"))
         ws_dom.cell(row, 4, q["ref"])
